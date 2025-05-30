@@ -4,13 +4,22 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/company")
 public class CompanyController {
     private final CompanyService companyService;
+    private final CompanyRepository companyRepository;
 
-    public CompanyController(CompanyService companyService) {
+    public CompanyController(CompanyService companyService, CompanyRepository companyRepository) {
         this.companyService = companyService;
+        this.companyRepository = companyRepository;
+    }
+
+    @GetMapping("/companies")
+    public List<Company> getAll() {
+        return companyService.getAll();
     }
 
     @GetMapping("/hello")
