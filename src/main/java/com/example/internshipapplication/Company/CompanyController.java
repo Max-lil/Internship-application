@@ -10,11 +10,9 @@ import java.util.List;
 @RequestMapping("/company")
 public class CompanyController {
     private final CompanyService companyService;
-    private final CompanyRepository companyRepository;
 
     public CompanyController(CompanyService companyService, CompanyRepository companyRepository) {
         this.companyService = companyService;
-        this.companyRepository = companyRepository;
     }
 
     @GetMapping("/companies")
@@ -26,5 +24,6 @@ public class CompanyController {
     public String hello() {
         return "Company";
     }
+
 
 }
