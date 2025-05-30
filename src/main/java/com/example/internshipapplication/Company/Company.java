@@ -1,4 +1,4 @@
-package Company;
+package com.example.internshipapplication.Company;
 
 public class Company {
     private int id;

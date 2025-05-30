@@ -1,4 +1,4 @@
-package User;
+package com.example.internshipapplication.User;
 
 
 import org.springframework.web.bind.annotation.GetMapping;
