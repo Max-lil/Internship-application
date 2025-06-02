@@ -15,4 +15,17 @@ public class StudentService {
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
+    public Student getStudentById(Integer id) {
+        if(id != null) {
+            return studentRepository.findById(id);
+        }
+        return null;
+    }
+
+    public Student addStudent(Student student) {
+        if(student != null) {
+            return studentRepository.save(student);
+        }
+        return null;
+    }
 }

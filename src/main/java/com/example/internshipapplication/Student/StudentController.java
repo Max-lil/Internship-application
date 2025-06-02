@@ -1,8 +1,6 @@
 package com.example.internshipapplication.Student;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,5 +16,13 @@ public class StudentController {
     @GetMapping("/all")
     public List<Student> getAllStudents() {
         return studentService.getAllStudents();
+    }
+    @GetMapping("/id/{id}")
+    public Student getStudentById(@PathVariable Integer id) {
+        return studentService.getStudentById(id);
+    }
+    @PutMapping("/add")
+    public Student addStudent(@RequestBody Student student) {
+        return studentService.addStudent(student);
     }
 }

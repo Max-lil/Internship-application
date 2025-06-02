@@ -24,8 +24,14 @@ public class CompanyService {
     }
 
     public List <Company> getByLocation(String location) {
-        if (companyRepository.findByLocationContainingIgnoreCase(location) != null) {
+        if (location != null) {
             return companyRepository.findByLocationContainingIgnoreCase(location);
+        }
+        return null;
+    }
+    public List <Company> getByIndustry(String industry) {
+        if (industry != null) {
+            return companyRepository.findByIndustryContainingIgnoreCase(industry);
         }
         return null;
     }
