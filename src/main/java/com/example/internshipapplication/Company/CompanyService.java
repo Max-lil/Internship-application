@@ -35,4 +35,11 @@ public class CompanyService {
         }
         return null;
     }
+
+    public List <Company> findByPeriodIgnoreCase(String period) {
+        if (period != null) {
+            return companyRepository.findByPeriodIgnoreCase(period);
+        }
+        return null;
+    }
 }

@@ -34,4 +34,11 @@ public class CompanyController {
         return companyService.getByIndustry(industry);
     }
 
+    @GetMapping("/lia/{period}")
+    public List<Company> getCompaniesByPeriod(@PathVariable String period) {
+        return companyService.findByPeriodIgnoreCase(period);
+    }
+
+
+
 }
