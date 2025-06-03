@@ -39,6 +39,4 @@ public class CompanyController {
         return companyService.findByPeriodIgnoreCase(period);
     }
 
-
-
 }
