@@ -42,4 +42,8 @@ public class CompanyService {
         }
         return null;
     }
+
+    public Company addCompany(Company company) {
+        return companyRepository.save(company);
+    }
 }

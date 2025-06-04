@@ -27,29 +27,6 @@ public class StudentController {
         return studentService.getStudentById(id);
     }
 
-    /**
-     Skapa en student. CV är valfritt vid registrering.
-     */
-    @PostMapping("/add")
-    public ResponseEntity<Student> addStudentWithOptionalCv(
-            @RequestParam String firstName,
-            @RequestParam String lastName,
-            @RequestParam String location,
-            @RequestParam String email,
-            @RequestParam String phoneNumber,
-            @RequestParam(required = false) MultipartFile cv
-    ) {
-        try {
-            Student student = studentService.addStudent(firstName, lastName, location, email, phoneNumber, cv);
-            return ResponseEntity.ok(student);
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
-    }
-
-    /**
-     * Lägg till eller byt CV i efterhand för en redan registrerad student.
-     */
     @PutMapping("/{id}/cv")
     public ResponseEntity<String> uploadCvForExistingStudent(
             @PathVariable Long id,
