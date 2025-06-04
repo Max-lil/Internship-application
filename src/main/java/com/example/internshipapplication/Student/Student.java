@@ -35,6 +35,18 @@ public class Student {
     @Column(name = "created_at", updatable = false, insertable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "cv_file", nullable = true)
+    private String cvFile;
+
+
+    public String getCvFile() {
+        return cvFile;
+    }
+
+    public void setCvFile(String cvFile) {
+        this.cvFile = cvFile;
+    }
+
     public Student() {
 
     }
@@ -76,7 +88,7 @@ public class Student {
         return lastName;
     }
 
-    public void setLast_name(String lastName) {
+    public void setLastname(String lastName) {
         this.lastName = lastName;
     }
 
@@ -89,10 +101,10 @@ public class Student {
     }
 
     public String getPhoneNumber() {
-        return phoneNumber;
+       return phoneNumber;
     }
 
-    public void setPhone_number(String phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 }
