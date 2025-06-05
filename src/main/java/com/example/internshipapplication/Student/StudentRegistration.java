@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/register/student")
 public class StudentRegistration {
@@ -19,16 +21,17 @@ public class StudentRegistration {
      Skapa en student. CV är valfritt vid registrering.
      */
     @PostMapping
-    public ResponseEntity<Student> addStudentWithOptionalCv(
+    public ResponseEntity<Student> addStudent(
             @RequestParam String firstName,
             @RequestParam String lastName,
             @RequestParam String location,
             @RequestParam String email,
             @RequestParam String phoneNumber,
-            @RequestParam(required = false) MultipartFile cv
+            @RequestParam(required = false) MultipartFile cv,
+            @RequestParam(required = false) List<String> skills
     ) {
         try {
-            Student student = studentService.addStudent(firstName, lastName, location, email, phoneNumber, cv);
+            Student student = studentService.addStudent(firstName, lastName, location, email, phoneNumber, cv, skills);
             return ResponseEntity.ok(student);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/students")
@@ -40,5 +41,13 @@ public class StudentController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fel vid uppladdning av CV.");
         }
+    }
+    @GetMapping("/{id}/skills")
+    public ResponseEntity<Set<String>> getStudentSkills(@PathVariable Integer id) {
+        Student student = studentService.getStudentById(id);
+        if (student == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(student.getSkillNames());
     }
 }

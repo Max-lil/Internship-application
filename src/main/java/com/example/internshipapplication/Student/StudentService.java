@@ -6,15 +6,19 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.nio.file.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class StudentService {
 
     private final StudentRepository studentRepository;
+    private final SkillRepository skillRepository;
 
-    public StudentService(StudentRepository studentRepository) {
+    public StudentService(StudentRepository studentRepository, SkillRepository skillRepository) {
         this.studentRepository = studentRepository;
+        this.skillRepository = skillRepository;
     }
 
     public List<Student> getAllStudents() {
@@ -29,7 +33,8 @@ public class StudentService {
     }
 
     public Student addStudent(String firstName, String lastName, String location,
-                              String email, String phoneNumber, MultipartFile file) {
+                              String email, String phoneNumber, MultipartFile file,
+                              List<String> skillNames) {
         try {
             Student student = new Student();
             student.setFirstName(firstName);
@@ -60,6 +65,15 @@ public class StudentService {
 
                 // Koppla filnamnet till studentobjektet
                 student.setCvFile(fileName);
+            }
+            if (skillNames != null) {
+                Set<Skill> skillSet = new HashSet<>();
+                for (String skillName : skillNames) {
+                    Skill skill = skillRepository.findByNameIgnoreCase(skillName.trim())
+                            .orElseGet(() -> skillRepository.save(new Skill(skillName.trim())));
+                    skillSet.add(skill);
+                }
+                student.setSkills(skillSet);
             }
 
             return studentRepository.save(student);

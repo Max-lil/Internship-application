@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "students")
@@ -37,6 +40,16 @@ public class Student {
 
     @Column(name = "cv_file", nullable = true)
     private String cvFile;
+
+
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "student_skills",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id")
+    )
+    private Set<Skill> skills = new HashSet<>();
+
 
 
     public String getCvFile() {
@@ -106,5 +119,19 @@ public class Student {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+    public Set<Skill> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(Set<Skill> skills) {
+        this.skills = skills;
+    }
+    @JsonProperty("skills")
+    public Set<String> getSkillNames() {
+        if (skills == null) return Set.of();
+        return skills.stream()
+                .map(Skill::getName)
+                .collect(Collectors.toSet());
     }
 }
