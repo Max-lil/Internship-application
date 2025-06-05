@@ -8,4 +8,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     Student findById(Integer id);
 
+    // kolla dubbletter av e-post
+    boolean existsByEmail(String email);
 }

@@ -1,6 +1,6 @@
 package com.example.internshipapplication.Student;
 
-
+import com.example.internshipapplication.exception.InvalidInputException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,7 +16,7 @@ public class StudentRegistration {
     }
 
     /**
-     Skapa en student. CV är valfritt vid registrering.
+     * Skapa en student. CV är valfritt vid registrering.
      */
     @PostMapping
     public ResponseEntity<Student> addStudentWithOptionalCv(
@@ -27,14 +27,23 @@ public class StudentRegistration {
             @RequestParam String phoneNumber,
             @RequestParam(required = false) MultipartFile cv
     ) {
+        if (firstName == null || firstName.trim().isEmpty()) {
+            throw new InvalidInputException("Förnamn får inte vara tomt.");
+        }
+
+        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            throw new InvalidInputException("Ogiltig e-postadress.");
+        }
+        if (studentService.emailExists(email)) {
+            throw new InvalidInputException("E-postadressen är redan registrerad.");
+        }
+
+
         try {
             Student student = studentService.addStudent(firstName, lastName, location, email, phoneNumber, cv);
             return ResponseEntity.ok(student);
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
+            throw new RuntimeException("Misslyckades att registrera student.", e);
         }
     }
-    /**
-     * Lägg till eller byt CV i efterhand för en redan registrerad student.
-     */
 }
