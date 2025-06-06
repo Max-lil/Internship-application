@@ -16,7 +16,6 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
     @JsonProperty("first_name")
     @Column(nullable = false)
     private String firstName;
@@ -51,7 +50,6 @@ public class Student {
     private Set<Skill> skills = new HashSet<>();
 
 
-
     public String getCvFile() {
         return cvFile;
     }
@@ -79,24 +77,31 @@ public class Student {
     public void setId(Long id) {
         this.id = id;
     }
+
     public String getFirstName() {
         return firstName;
     }
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
     public String getLocation() {
         return location;
     }
+
     public void setLocation(String location) {
         this.location = location;
     }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
+
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
     public String getLastName() {
         return lastName;
     }
@@ -114,7 +119,7 @@ public class Student {
     }
 
     public String getPhoneNumber() {
-       return phoneNumber;
+        return phoneNumber;
     }
 
     public void setPhoneNumber(String phoneNumber) {

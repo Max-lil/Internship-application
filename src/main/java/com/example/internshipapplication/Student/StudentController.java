@@ -28,6 +28,15 @@ public class StudentController {
         return studentService.getStudentById(id);
     }
 
+    @DeleteMapping("/{id}/skills/{skillId}")  //
+    public ResponseEntity<String> removeSkillFromStudent(
+            @PathVariable Long id,
+            @PathVariable Long skillId) {
+
+        studentService.deleteSkillById(id, skillId);
+        return ResponseEntity.ok("Skill removed from student " + id);
+    }
+
     @PutMapping("/{id}/cv")
     public ResponseEntity<String> uploadCvForExistingStudent(
             @PathVariable Long id,

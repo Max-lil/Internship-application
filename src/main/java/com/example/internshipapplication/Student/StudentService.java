@@ -36,6 +36,15 @@ public class StudentService {
         return studentRepository.existsByEmail(email);
     }
 
+    public void deleteSkillById(Long studentId, Long skillId) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student inte hittad"));
+
+        student.getSkills().removeIf(skill -> skill.getId().equals(skillId));
+
+        studentRepository.save(student);
+    }
+
     public Student addStudent(String firstName, String lastName, String location,
                               String email, String phoneNumber, MultipartFile file,
                               List<String> skillNames) {
