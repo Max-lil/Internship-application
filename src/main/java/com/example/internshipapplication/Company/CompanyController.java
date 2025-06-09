@@ -43,6 +43,13 @@ public class CompanyController {
         return ResponseEntity.noContent().build(); // 204 = bekräftelse att det är borta
     }
 
-
+    @GetMapping("/{id}/email")
+    public ResponseEntity<String> getCompanyById(@PathVariable Long id) {
+        Company company = companyService.getCompanyById(id);
+        if(company != null) {
+            return ResponseEntity.ok(company.getEmail());
+        } else
+            return ResponseEntity.notFound().build();
+    }
 
 }

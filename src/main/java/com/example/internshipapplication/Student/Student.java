@@ -46,7 +46,7 @@ public class Student {
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
-            name = "student_skills",
+            name = "student_skills", // Relationstabellen i databasen
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "skill_id")
     )
@@ -143,6 +143,10 @@ public class Student {
     public void setSkills(Set<Skill> skills) {
         this.skills = skills;
     }
+    /*
+    När ett Student-objekt returneras som JSON, kommer skills-fältet
+    att innehålla en lista med strings.
+     */
     @JsonProperty("skills")
     public Set<String> getSkillNames() {
         if (skills == null) return Set.of();

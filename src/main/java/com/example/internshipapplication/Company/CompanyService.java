@@ -52,6 +52,11 @@ public class CompanyService {
         Company company = companyRepository.findById(id).get();
         companyRepository.delete(company);
     }
+
+    public Company getCompanyById(Long id) {
+        return companyRepository.findById(id).get();
+    }
+
 }
 
 
