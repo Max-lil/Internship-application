@@ -37,6 +37,9 @@ public class Student {
     @Column(name = "created_at", updatable = false, insertable = false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false )
+    private String education;
+
     @Column(name = "cv_file", nullable = true)
     private String cvFile;
 
@@ -127,6 +130,14 @@ public class Student {
     }
     public Set<Skill> getSkills() {
         return skills;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
     }
 
     public void setSkills(Set<Skill> skills) {

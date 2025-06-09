@@ -67,5 +67,21 @@ public class StudentController {
         return ResponseEntity.ok("Skills tillagda till student med ID " + id);
     }
 
+    @PutMapping("/{id}/education")
+    public ResponseEntity<Student> updateStudentEducation(
+            @PathVariable Long id,
+            @RequestBody String education) {
+
+        try {
+            Student updatedStudent = studentService.updateEducation(id, education);
+            return ResponseEntity.ok(updatedStudent);
+        } catch (Exception e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 }
+
+
 

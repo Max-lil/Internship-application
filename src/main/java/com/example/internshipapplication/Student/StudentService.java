@@ -61,10 +61,18 @@ public class StudentService {
         studentRepository.save(student);
     }
 
+    public Student updateEducation(Long studentId, String education) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student not found"));
+
+        student.setEducation(education);
+        return studentRepository.save(student);
+    }
+
     // Metod för att lägga till en ny student med tillhörande information, CV och färdigheter
     public Student addStudent(String firstName, String lastName, String location,
                               String email, String phoneNumber, MultipartFile file,
-                              List<String> skillNames) {
+                              List<String> skillNames, String education) {
         try {
             // Skapa ett nytt Student-objekt
             Student student = new Student();
@@ -73,6 +81,7 @@ public class StudentService {
             student.setLocation(location);
             student.setEmail(email);
             student.setPhoneNumber(phoneNumber);
+            student.setEducation(education);
 
             // Hantering av uppladdat CV
             if (file != null && !file.isEmpty()) {

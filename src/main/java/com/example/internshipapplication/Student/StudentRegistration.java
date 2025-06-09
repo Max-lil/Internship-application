@@ -28,7 +28,8 @@ public class StudentRegistration {
             @RequestParam String email,
             @RequestParam String phoneNumber,
             @RequestParam(required = false) MultipartFile cv,
-            @RequestParam(required = false) List<String> skills
+            @RequestParam(required = false) List<String> skills,
+            @RequestParam(required = false) String education
     ) {
         if (firstName == null || firstName.trim().isEmpty()) {
             throw new InvalidInputException("Förnamn får inte vara tomt.");
@@ -43,7 +44,8 @@ public class StudentRegistration {
 
 
         try {
-            Student student = studentService.addStudent(firstName, lastName, location, email, phoneNumber, cv, skills);
+            Student student = studentService.addStudent(firstName, lastName, location, email, phoneNumber, cv, skills,
+                    education);
             return ResponseEntity.ok(student);
         } catch (Exception e) {
             throw new RuntimeException("Misslyckades att registrera student.", e);

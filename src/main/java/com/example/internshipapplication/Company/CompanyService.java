@@ -1,5 +1,6 @@
 package com.example.internshipapplication.Company;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,4 +47,11 @@ public class CompanyService {
     public Company addCompany(Company company) {
         return companyRepository.save(company);
     }
+
+    public void deleteCompanyById(Long id) {
+        Company company = companyRepository.findById(id).get();
+        companyRepository.delete(company);
+    }
 }
+
+
