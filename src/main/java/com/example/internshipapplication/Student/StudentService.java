@@ -31,6 +31,22 @@ public class StudentService {
         }
         return null;
     }
+    public void addSkillsToStudent(Long studentId, List<String> skillNames) {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student med ID " + studentId + " hittades inte"));
+
+        Set<Skill> currentSkills = student.getSkills() != null ? student.getSkills() : new HashSet<>();
+
+        for (String skillName : skillNames) {
+            Skill skill = skillRepository.findByNameIgnoreCase(skillName.trim())
+                    .orElseGet(() -> skillRepository.save(new Skill(skillName.trim())));
+            currentSkills.add(skill);
+        }
+
+        student.setSkills(currentSkills);
+        studentRepository.save(student);
+    }
+
 
     public boolean emailExists(String email) {
         return studentRepository.existsByEmail(email);
@@ -73,16 +89,16 @@ public class StudentService {
                 student.setCvFile(fileName); // Spara filnamnet i studentobjektet
             }
 
-            // Hantering av färdigheter
+            // Hantering av skills
             if (skillNames != null) {
                 Set<Skill> skillSet = new HashSet<>();
                 for (String skillName : skillNames) {
-                    // Hämta färdighet från databasen eller skapa ny om den inte finns
+                    // Hämta skills från databasen eller skapa ny om den inte finns
                     Skill skill = skillRepository.findByNameIgnoreCase(skillName.trim())
                             .orElseGet(() -> skillRepository.save(new Skill(skillName.trim())));
                     skillSet.add(skill);
                 }
-                student.setSkills(skillSet); // Lägg till färdigheterna i studentobjektet
+                student.setSkills(skillSet); // Lägg till skills i studentobjektet
             }
 
             // Spara studenten i databasen och returnera objektet

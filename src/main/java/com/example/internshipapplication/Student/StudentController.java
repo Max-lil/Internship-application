@@ -59,4 +59,13 @@ public class StudentController {
         }
         return ResponseEntity.ok(student.getSkillNames());
     }
+    @PostMapping("/{id}/add-skills")
+    public ResponseEntity<?> addSkillsToStudent(
+            @PathVariable Long id,
+            @RequestBody List<String> skillNames) {
+        studentService.addSkillsToStudent(id, skillNames);
+        return ResponseEntity.ok("Skills tillagda till student med ID " + id);
+    }
+
 }
+
