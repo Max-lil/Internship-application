@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Set;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000")//Tillåter typ åtkomst från react-porten
 @RestController
 @RequestMapping("/students")
 public class StudentController {
