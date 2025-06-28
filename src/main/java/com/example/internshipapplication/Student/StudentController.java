@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import java.util.Set;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/students")
 public class StudentController {
