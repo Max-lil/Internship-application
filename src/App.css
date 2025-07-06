@@ -1,38 +1,197 @@
+/* App.css - Styling för Internship Portal */
+
+/* CSS VARIABLER - Ändra färger här istället för att söka genom hela filen! */
+:root {
+  /* NEUTRAL GRÅ-TON - Stilren och professionell */
+  --primary-blue: #95a5a6;     /* Mellang grå cirkel */
+  --primary-purple: #7f8c8d;   /* Mörkare grå cirkel */
+  --accent-pink: #ecf0f1;      /* Ljusgrå gradient-start */
+  --accent-orange: #bdc3c7;    /* Mellang grå gradient-mitt */
+  --accent-cyan: #d5dbdb;      /* Ljusgrå gradient-slut */
+  
+  /* Färger för korten och text */
+  --card-bg: #f8f9fa;          /* Ljusgrå bakgrund på korten */
+  --card-border: #e9ecef;      /* Grå ram runt korten */
+  --text-dark: #333;           /* Mörk text (rubriker) */
+  --text-light: #666;          /* Ljusare text (beskrivningar) */
+  --white: #ffffff;            /* Vit färg för rutan */
+}
+
+/* Ta bort standard margin/padding från alla element */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;  /* Gör så padding/border räknas inuti elementets storlek */
+}
+
+/* BAKGRUND - Den coola bakgrunden med cirklar och gradient */
+body {
+  font-family: 'Arial', sans-serif;
+  /* Tre lager bakgrund ovanpå varandra: */
+  background: 
+    /* Lager 1: Blå cirkel längst upp till vänster */
+    radial-gradient(circle at 25% 25%, var(--primary-blue) 0%, transparent 50%),
+    /* Lager 2: Lila cirkel längst ner till höger */
+    radial-gradient(circle at 75% 75%, var(--primary-purple) 0%, transparent 50%),
+    /* Lager 3: Färgglad gradient som bas (rosa → orange → cyan) */
+    linear-gradient(45deg, var(--accent-pink) 0%, var(--accent-orange) 50%, var(--accent-cyan) 100%);
+  background-size: 100% 100%, 100% 100%, 100% 100%;  /* Alla lager täcker hela skärmen */
+  background-attachment: fixed;  /* Bakgrunden rör sig inte när man scrollar */
+  min-height: 100vh;  /* Minst så hög som hela skärmen */
+}
+
+/* LANDNINGSSIDA - Den vita rutan med fyra kort */
+.landing-container {
+  background: var(--white);              /* Vit bakgrund på rutan */
+  border-radius: 15px;                   /* Rundade hörn */
+  padding: 3rem;                         /* Utrymme inne i rutan (48px) */
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);  /* Skugga under rutan för djup */
+  text-align: center;                    /* Centrerad text */
+  max-width: 600px;                      /* Max bredd 600px */
+  width: 90%;                            /* 90% av skärmens bredd på mobil */
+  margin: 50px auto;                     /* 50px ovanför/under, centrerad horisontellt */
+}
+
+/* Huvud-titeln "Internship Portal" */
+.landing-container h1 {
+  color: var(--text-dark);               /* Mörk text-färg */
+  margin-bottom: 2.5rem;                 /* Avstånd under titeln (40px) */
+  font-size: 2.5rem;                     /* Stor text-storlek */
+}
+
+/* Ta bort subtitle styling eftersom vi inte använder den längre */
+
+/* Grid-layout för de fyra korten */
+.options {
+  display: grid;                         /* Använd CSS Grid */
+  grid-template-columns: 1fr 1fr;        /* Två kolumner, lika breda */
+  gap: 2rem;                             /* 32px mellanrum mellan korten */
+  margin-bottom: 2rem;                   /* Avstånd under grid:en */
+}
+
+/* Varje klickbart kort (Visa Studenter, Visa Företag, etc.) */
+.option-card {
+  background: var(--card-bg);            /* Ljusgrå bakgrund */
+  border: 2px solid var(--card-border);  /* Tunn grå ram */
+  border-radius: 10px;                   /* Rundade hörn */
+  padding: 2rem;                         /* Utrymme inne i kortet */
+  cursor: pointer;                       /* Visa hand-pekare när man hovrar */
+  transition: all 0.3s ease;             /* Mjuk animation när man hovrar */
+}
+
+/* Vad som händer när man hovrar över ett kort */
+.option-card:hover {
+  transform: translateY(-5px);           /* Lyfter kortet 5px uppåt */
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);  /* Större skugga för djup */
+  border-color: var(--primary-blue);     /* Ramen blir blå */
+}
+
+/* Rubrik i varje kort (ex: "Visa Studenter") */
+.option-card h3 {
+  color: var(--text-dark);               /* Mörk text */
+  margin-bottom: 0.5rem;                 /* Litet avstånd under rubriken */
+  font-size: 1.3rem;                     /* Lite större text */
+}
+
+/* Beskrivning i varje kort (ex: "Se alla registrerade studenter...") */
+.option-card p {
+  color: var(--text-light);              /* Ljusare grå text */
+  font-size: 0.9rem;                     /* Lite mindre text */
+}
+
+/* Emoji-ikonen i varje kort (👨‍🎓, 🏢, etc.) */
+.icon {
+  font-size: 2.5rem;                     /* Stor emoji */
+  margin-bottom: 1rem;                   /* Avstånd under ikonen */
+}
+
+/* Footer med copyright-text längst ner */
+.footer {
+  margin-top: 2rem;                      /* Avstånd ovanför footern */
+  padding-top: 2rem;                     /* Utrymme inne i footern */
+  border-top: 1px solid var(--card-border);  /* Tunn linje ovanför */
+  color: var(--text-light);              /* Ljusgrå text */
+  font-size: 0.9rem;                     /* Mindre text-storlek */
+}
+
+/* STUDENTER-SIDA - När man klickar "Visa Studenter" */
 .App {
-  text-align: center;
+  padding: 2rem;                         /* Utrymme runt innehållet */
+  max-width: 800px;                      /* Max bredd 800px */
+  margin: 0 auto;                        /* Centrerad horisontellt */
+  background: var(--white);              /* Vit bakgrund */
+  margin-top: 50px;                      /* Avstånd från toppen */
+  border-radius: 15px;                   /* Rundade hörn */
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);  /* Skugga för djup */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Rubrik på studenter-sidan */
+.App h1 {
+  color: var(--text-dark);               /* Mörk text */
+  margin-bottom: 2rem;                   /* Avstånd under rubriken */
+  text-align: center;                    /* Centrerad text */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+/* Varje student-kort i listan */
+.student-card {
+  background: var(--card-bg);            /* Ljusgrå bakgrund */
+  border: 1px solid var(--card-border);  /* Tunn grå ram */
+  border-radius: 8px;                    /* Rundade hörn */
+  padding: 1.5rem;                       /* Utrymme inne i kortet */
+  margin-bottom: 1rem;                   /* Avstånd mellan korten */
+  transition: box-shadow 0.3s ease;      /* Mjuk animation för hover */
+}
+
+/* Hover-effekt på student-kort */
+.student-card:hover {
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);  /* Lägger till skugga när man hovrar */
+}
+
+/* Text i varje student-kort */
+.student-card p {
+  margin-bottom: 0.5rem;                 /* Avstånd mellan raderna */
+  color: var(--text-dark);               /* Mörk text */
+}
+
+/* "Tillbaka till startsidan"-knapp */
+.back-button {
+  background: var(--primary-blue);       /* Blå bakgrund (samma som hover-färg) */
+  color: var(--white);                   /* Vit text */
+  border: none;                          /* Ingen ram */
+  padding: 0.8rem 1.5rem;                /* Utrymme inne i knappen */
+  border-radius: 8px;                    /* Rundade hörn */
+  cursor: pointer;                       /* Hand-pekare */
+  margin-bottom: 2rem;                   /* Avstånd under knappen */
+  font-size: 1rem;                       /* Normal text-storlek */
+  transition: background 0.3s ease;      /* Mjuk färg-ändring vid hover */
+}
+
+/* Hover-effekt på tillbaka-knappen */
+.back-button:hover {
+  background: #5a67d8;                   /* Mörkare blå när man hovrar */
+}
+
+/* RESPONSIV DESIGN - För mobiler och surfplattor */
+@media (max-width: 768px) {
+  /* På skärmar mindre än 768px bred: */
+  .options {
+    grid-template-columns: 1fr;          /* Ett kort per rad istället för två */
   }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+  
+  /* Mindre titel på mobil */
+  .landing-container h1 {
+    font-size: 2rem;                     /* Mindre text (32px istället för 40px) */
   }
-  to {
-    transform: rotate(360deg);
+  
+  /* Mindre padding på mobil */
+  .landing-container {
+    padding: 2rem;                       /* Mindre utrymme inne i rutan */
+    margin: 20px auto;                   /* Mindre avstånd från kanten */
+  }
+
+  /* Studenter-sidan på mobil */
+  .App {
+    padding: 1rem;                       /* Mindre utrymme runt innehållet */
+    margin: 20px auto;                   /* Mindre avstånd från kanten */
   }
 }
