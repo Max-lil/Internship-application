@@ -1,4 +1,4 @@
-/* App.css - Styling för Internship Portal */
+/* App.css - Styling för Internship Portal med Portal-struktur */
 
 /* CSS VARIABLER - Ändra färger här istället för att söka genom hela filen! */
 :root {
@@ -40,14 +40,14 @@ body {
   min-height: 100vh;  /* Minst så hög som hela skärmen */
 }
 
-/* LANDNINGSSIDA - Den vita rutan med fyra kort */
+/* LANDNINGSSIDA - Den vita rutan med tre portaler */
 .landing-container {
   background: var(--white);              /* Vit bakgrund på rutan */
   border-radius: 15px;                   /* Rundade hörn */
   padding: 3rem;                         /* Utrymme inne i rutan (48px) */
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);  /* Skugga under rutan för djup */
   text-align: center;                    /* Centrerad text */
-  max-width: 600px;                      /* Max bredd 600px */
+  max-width: 800px;                      /* ÄNDRAT: Ökad bredd för 3 portaler */
   width: 90%;                            /* 90% av skärmens bredd på mobil */
   margin: 50px auto;                     /* 50px ovanför/under, centrerad horisontellt */
 }
@@ -55,21 +55,26 @@ body {
 /* Huvud-titeln "Internship Portal" */
 .landing-container h1 {
   color: var(--text-dark);               /* Mörk text-färg */
-  margin-bottom: 2.5rem;                 /* Avstånd under titeln (40px) */
+  margin-bottom: 1rem;                   /* ÄNDRAT: Mindre avstånd för subtitle */
   font-size: 2.5rem;                     /* Stor text-storlek */
 }
 
-/* Ta bort subtitle styling eftersom vi inte använder den längre */
+/* NYTT: Subtitle styling */
+.landing-container .subtitle {
+  color: var(--text-light);              /* Ljusare grå text */
+  font-size: 1.2rem;                     /* Mellanstor text */
+  margin-bottom: 2.5rem;                 /* Avstånd under subtitle */
+}
 
-/* Grid-layout för de fyra korten */
+/* ÄNDRAT: Grid-layout för de tre portalerna */
 .options {
   display: grid;                         /* Använd CSS Grid */
-  grid-template-columns: 1fr 1fr;        /* Två kolumner, lika breda */
+  grid-template-columns: repeat(3, 1fr); /* ÄNDRAT: Tre kolumner, lika breda */
   gap: 2rem;                             /* 32px mellanrum mellan korten */
   margin-bottom: 2rem;                   /* Avstånd under grid:en */
 }
 
-/* Varje klickbart kort (Visa Studenter, Visa Företag, etc.) */
+/* Varje klickbart kort (Admin Portal, Student Portal, etc.) */
 .option-card {
   background: var(--card-bg);            /* Ljusgrå bakgrund */
   border: 2px solid var(--card-border);  /* Tunn grå ram */
@@ -86,20 +91,20 @@ body {
   border-color: var(--primary-blue);     /* Ramen blir blå */
 }
 
-/* Rubrik i varje kort (ex: "Visa Studenter") */
+/* Rubrik i varje kort (ex: "Admin Portal") */
 .option-card h3 {
   color: var(--text-dark);               /* Mörk text */
   margin-bottom: 0.5rem;                 /* Litet avstånd under rubriken */
   font-size: 1.3rem;                     /* Lite större text */
 }
 
-/* Beskrivning i varje kort (ex: "Se alla registrerade studenter...") */
+/* Beskrivning i varje kort (ex: "Hantera studenter, företag...") */
 .option-card p {
   color: var(--text-light);              /* Ljusare grå text */
   font-size: 0.9rem;                     /* Lite mindre text */
 }
 
-/* Emoji-ikonen i varje kort (👨‍🎓, 🏢, etc.) */
+/* Emoji-ikonen i varje kort (⚙️, 👨‍🎓, 🏢) */
 .icon {
   font-size: 2.5rem;                     /* Stor emoji */
   margin-bottom: 1rem;                   /* Avstånd under ikonen */
@@ -114,10 +119,10 @@ body {
   font-size: 0.9rem;                     /* Mindre text-storlek */
 }
 
-/* STUDENTER-SIDA - När man klickar "Visa Studenter" */
+/* ALLA SIDOR - När man klickar på portaler eller visar listor */
 .App {
   padding: 2rem;                         /* Utrymme runt innehållet */
-  max-width: 800px;                      /* Max bredd 800px */
+  max-width: 1000px;                     /* ÄNDRAT: Ökad bredd för bättre layout */
   margin: 0 auto;                        /* Centrerad horisontellt */
   background: var(--white);              /* Vit bakgrund */
   margin-top: 50px;                      /* Avstånd från toppen */
@@ -125,11 +130,24 @@ body {
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);  /* Skugga för djup */
 }
 
-/* Rubrik på studenter-sidan */
+/* Rubrik på alla sidor */
 .App h1 {
   color: var(--text-dark);               /* Mörk text */
   margin-bottom: 2rem;                   /* Avstånd under rubriken */
   text-align: center;                    /* Centrerad text */
+}
+
+/* NYTT: Rubrik för profil-sektioner */
+.App h2 {
+  color: var(--text-dark);               /* Mörk text */
+  margin-bottom: 1rem;                   /* Avstånd under rubriken */
+  font-size: 1.8rem;                     /* Stor text */
+}
+
+.App h3 {
+  color: var(--text-dark);               /* Mörk text */
+  margin-bottom: 1rem;                   /* Avstånd under rubriken */
+  font-size: 1.4rem;                     /* Mellanstor text */
 }
 
 /* Varje student-kort i listan */
@@ -153,9 +171,20 @@ body {
   color: var(--text-dark);               /* Mörk text */
 }
 
-/* "Tillbaka till startsidan"-knapp */
+/* NYTT: Styling för skills-lista */
+.student-card ul {
+  margin: 0.5rem 0;                      /* Avstånd ovanför/under listan */
+  padding-left: 1.5rem;                  /* Indrag för bullet points */
+}
+
+.student-card li {
+  color: var(--text-dark);               /* Mörk text */
+  margin-bottom: 0.3rem;                 /* Litet avstånd mellan skills */
+}
+
+/* "Tillbaka"-knapp */
 .back-button {
-  background: var(--primary-blue);       /* Blå bakgrund (samma som hover-färg) */
+  background: var(--primary-blue);       /* Blå bakgrund */
   color: var(--white);                   /* Vit text */
   border: none;                          /* Ingen ram */
   padding: 0.8rem 1.5rem;                /* Utrymme inne i knappen */
@@ -171,11 +200,135 @@ body {
   background: #5a67d8;                   /* Mörkare blå när man hovrar */
 }
 
+/* REGISTRERINGSFORMULÄR - Styling för student-registrering */
+.student-form {
+  max-width: 500px;                      /* Max bredd på formuläret */
+  margin: 0 auto;                        /* Centrerat */
+  text-align: left;                      /* Vänsterjusterad text i formuläret */
+}
+
+/* Varje fält-container (div som omsluter label + input) */
+.student-form div {
+  margin-bottom: 1.5rem;                 /* Avstånd mellan fälten */
+}
+
+/* Alla labels (Förnamn:, Email:, etc.) */
+.student-form label {
+  display: block;                        /* Tar upp hela bredden */
+  margin-bottom: 0.5rem;                 /* Avstånd under label */
+  color: var(--text-dark);               /* Mörk text-färg */
+  font-weight: bold;                     /* Fet text */
+  font-size: 1rem;                       /* Normal storlek */
+}
+
+/* Alla input-fält */
+.student-form input {
+  width: 100%;                           /* Tar upp hela bredden */
+  padding: 0.8rem;                       /* Utrymme inne i fältet */
+  border: 2px solid var(--card-border);  /* Grå ram */
+  border-radius: 8px;                    /* Rundade hörn */
+  font-size: 1rem;                       /* Normal text-storlek */
+  transition: border-color 0.3s ease;    /* Mjuk animation vid fokus */
+}
+
+/* När användaren klickar i ett fält (fokus) */
+.student-form input:focus {
+  outline: none;                         /* Ta bort standard blå ram */
+  border-color: var(--primary-blue);     /* Blå ram när man fokuserar */
+  box-shadow: 0 0 5px rgba(149, 165, 166, 0.3);  /* Svag blå glöd */
+}
+
+/* Alla knappar i formulär */
+.student-form button {
+  background: var(--primary-blue);       /* Blå bakgrund */
+  color: var(--white);                   /* Vit text */
+  border: none;                          /* Ingen ram */
+  padding: 1rem 2rem;                    /* Större padding */
+  border-radius: 8px;                    /* Rundade hörn */
+  cursor: pointer;                       /* Hand-pekare */
+  font-size: 1.1rem;                     /* Lite större text */
+  font-weight: bold;                     /* Fet text */
+  width: 100%;                           /* Tar upp hela bredden */
+  margin-top: 1rem;                      /* Extra avstånd ovanför knappen */
+  transition: all 0.3s ease;             /* Mjuk animation */
+}
+
+/* Hover-effekt på alla formulär-knappar */
+.student-form button:hover {
+  background: #5a67d8;                   /* Mörkare blå vid hover */
+  transform: translateY(-2px);           /* Lyfter knappen lite */
+}
+
+/* NYTT: Styling för profil-sektioner (CV upload, Skills, etc.) */
+.profile-section {
+  background: var(--card-bg);            /* Ljusgrå bakgrund */
+  border: 1px solid var(--card-border);  /* Tunn grå ram */
+  border-radius: 8px;                    /* Rundade hörn */
+  padding: 2rem;                         /* Utrymme inne i sektionen */
+  margin-bottom: 2rem;                   /* Avstånd mellan sektionerna */
+}
+
+/* Form-styling inom profil-sektioner */
+.profile-section form {
+  display: flex;                         /* Flexbox för bättre layout */
+  flex-direction: column;                /* Vertikalt staplade element */
+  gap: 1rem;                             /* Avstånd mellan form-element */
+}
+
+/* Input i profil-sektioner */
+.profile-section input[type="text"],
+.profile-section input[type="file"] {
+  padding: 0.8rem;                       /* Utrymme inne i fältet */
+  border: 2px solid var(--card-border);  /* Grå ram */
+  border-radius: 8px;                    /* Rundade hörn */
+  font-size: 1rem;                       /* Normal text-storlek */
+  transition: border-color 0.3s ease;    /* Mjuk animation vid fokus */
+}
+
+/* Fokus-effekt på profil inputs */
+.profile-section input:focus {
+  outline: none;                         /* Ta bort standard blå ram */
+  border-color: var(--primary-blue);     /* Blå ram när man fokuserar */
+  box-shadow: 0 0 5px rgba(149, 165, 166, 0.3);  /* Svag blå glöd */
+}
+
+/* Knappar i profil-sektioner */
+.profile-section button {
+  background: var(--primary-blue);       /* Blå bakgrund */
+  color: var(--white);                   /* Vit text */
+  border: none;                          /* Ingen ram */
+  padding: 0.8rem 1.5rem;                /* Utrymme inne i knappen */
+  border-radius: 8px;                    /* Rundade hörn */
+  cursor: pointer;                       /* Hand-pekare */
+  font-size: 1rem;                       /* Normal text-storlek */
+  font-weight: bold;                     /* Fet text */
+  transition: all 0.3s ease;             /* Mjuk animation */
+  align-self: flex-start;                /* Knappen tar inte hela bredden */
+}
+
+/* Hover-effekt på profil-knappar */
+.profile-section button:hover {
+  background: #5a67d8;                   /* Mörkare blå vid hover */
+  transform: translateY(-2px);           /* Lyfter knappen lite */
+}
+
 /* RESPONSIV DESIGN - För mobiler och surfplattor */
-@media (max-width: 768px) {
-  /* På skärmar mindre än 768px bred: */
+@media (max-width: 968px) {
+  /* På skärmar mindre än 968px bred (stora surfplattor): */
   .options {
-    grid-template-columns: 1fr;          /* Ett kort per rad istället för två */
+    grid-template-columns: 1fr 1fr;      /* Två portaler per rad på surfplatta */
+  }
+  
+  /* Mindre padding på surfplatta */
+  .landing-container {
+    max-width: 600px;                    /* Mindre bredd */
+  }
+}
+
+@media (max-width: 768px) {
+  /* På skärmar mindre än 768px bred (mobiler): */
+  .options {
+    grid-template-columns: 1fr;          /* En portal per rad på mobil */
   }
   
   /* Mindre titel på mobil */
@@ -183,15 +336,36 @@ body {
     font-size: 2rem;                     /* Mindre text (32px istället för 40px) */
   }
   
+  /* Mindre subtitle på mobil */
+  .landing-container .subtitle {
+    font-size: 1rem;                     /* Mindre subtitle-text */
+  }
+  
   /* Mindre padding på mobil */
   .landing-container {
     padding: 2rem;                       /* Mindre utrymme inne i rutan */
     margin: 20px auto;                   /* Mindre avstånd från kanten */
+    max-width: 100%;                     /* Full bredd på mobil */
   }
 
-  /* Studenter-sidan på mobil */
+  /* Alla sidor på mobil */
   .App {
     padding: 1rem;                       /* Mindre utrymme runt innehållet */
     margin: 20px auto;                   /* Mindre avstånd från kanten */
+    max-width: 100%;                     /* Full bredd på mobil */
+  }
+  
+  /* Profil-sektioner på mobil */
+  .profile-section {
+    padding: 1.5rem;                     /* Mindre padding på mobil */
+  }
+  
+  /* Formulär på mobil */
+  .student-form {
+    max-width: 100%;                     /* Full bredd på mobil */
+  }
+  
+  .student-form input {
+    padding: 1rem;                       /* Större padding på mobil (lättare att trycka) */
   }
 }
