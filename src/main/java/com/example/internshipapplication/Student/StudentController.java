@@ -1,10 +1,8 @@
 package com.example.internshipapplication.Student;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 import java.util.Set;
 
@@ -25,7 +23,7 @@ public class StudentController {
     }
 
     @GetMapping("/id/{id}")
-    public Student getStudentById(@PathVariable Integer id) {
+    public Student getStudentById(@PathVariable Long id) {
         return studentService.getStudentById(id);
     }
 
@@ -53,7 +51,7 @@ public class StudentController {
         }
     }
     @GetMapping("/{id}/skills")
-    public ResponseEntity<Set<String>> getStudentSkills(@PathVariable Integer id) {
+    public ResponseEntity<Set<String>> getStudentSkills(@PathVariable Long id) {
         Student student = studentService.getStudentById(id);
         if (student == null) {
             return ResponseEntity.notFound().build();
@@ -66,6 +64,8 @@ public class StudentController {
             @RequestBody List<String> skillNames) {
         studentService.addSkillsToStudent(id, skillNames);
         return ResponseEntity.ok("Skills tillagda till student med ID " + id);
+        Student updatedStudent = studentService.getStudentById(id);
+        return ResponseEntity.ok(updatedStudent);
     }
 
     @PutMapping("/{id}/education")

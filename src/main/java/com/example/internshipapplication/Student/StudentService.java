@@ -25,11 +25,12 @@ public class StudentService {
         return studentRepository.findAll();
     }
 
-    public Student getStudentById(Integer id) {
+    public Student getStudentById(Long id) {
         if (id != null) {
-            return studentRepository.findById(id);
+            return studentRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Student med ID " + id + " hittades inte"));
         }
-        return null;
+        throw new RuntimeException("Student ID får inte vara null");
     }
     public void addSkillsToStudent(Long studentId, List<String> skillNames) {
         Student student = studentRepository.findById(studentId)
@@ -49,6 +50,7 @@ public class StudentService {
 
 
     public boolean emailExists(String email) {
+
         return studentRepository.existsByEmail(email);
     }
 
