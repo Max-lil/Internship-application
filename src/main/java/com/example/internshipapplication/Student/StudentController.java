@@ -63,7 +63,6 @@ public class StudentController {
             @PathVariable Long id,
             @RequestBody List<String> skillNames) {
         studentService.addSkillsToStudent(id, skillNames);
-        return ResponseEntity.ok("Skills tillagda till student med ID " + id);
         Student updatedStudent = studentService.getStudentById(id);
         return ResponseEntity.ok(updatedStudent);
     }
