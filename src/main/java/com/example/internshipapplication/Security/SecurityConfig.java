@@ -1,4 +1,4 @@
-package Security;
+package com.example.internshipapplication.Security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -15,30 +16,24 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                // Definiera vilka URLs som kräver inlogg
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**", "/css/**", "/js/**").permitAll() // Öppna endpoints
-                        .anyRequest().authenticated() // Alla andra kräver inlogg
+        // Behåller Spring Security's standardkonfiguration
+        http.authorizeHttpRequests(authz -> authz
+                        .anyRequest().authenticated()
                 )
-                // Konfigurera login-formulär
                 .formLogin(form -> form
-                        .loginPage("/login") // Custom login-sida (valfritt)
-                        .defaultSuccessUrl("/home", true) // Dit användaren skickas efter inlogg
-                        .permitAll() // Login-sidan ska vara öppen för alla
+                        .permitAll()
                 )
-                // Konfigurera logout
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login?logout") // Dit användaren skickas efter utlogg
                         .permitAll()
                 );
 
         return http.build();
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
+    }
+
 }

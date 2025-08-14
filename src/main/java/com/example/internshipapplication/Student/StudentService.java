@@ -79,7 +79,7 @@ public class StudentService {
             // Skapa ett nytt Student-objekt
             Student student = new Student();
             student.setFirstName(firstName);
-            student.setLastname(lastName);
+            student.setLastName(lastName);
             student.setLocation(location);
             student.setEmail(email);
             student.setPhoneNumber(phoneNumber);

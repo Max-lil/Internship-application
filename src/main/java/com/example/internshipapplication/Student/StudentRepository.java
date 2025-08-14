@@ -6,12 +6,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
 
-    Student findById(Integer id);
+    // LÄGG TILL DENNA - behövs för UserService
+    Student findByEmail(String email);
 
-    // kolla dubbletter av e-post
+    // Kolla dubbletter av e-post
     boolean existsByEmail(String email);
 }
-
-
 
 
