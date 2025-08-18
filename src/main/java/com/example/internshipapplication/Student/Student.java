@@ -27,8 +27,11 @@ public class Student {
     @Column(nullable = false)
     private String location;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false, unique = true)
+    private String password;
 
     @JsonProperty("phone_number")
     @Column(nullable = false)
@@ -109,7 +112,7 @@ public class Student {
         return lastName;
     }
 
-    public void setLastname(String lastName) {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
@@ -143,6 +146,15 @@ public class Student {
     public void setSkills(Set<Skill> skills) {
         this.skills = skills;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     /*
     När ett Student-objekt returneras som JSON, kommer skills-fältet
     att innehålla en lista med strings.
@@ -154,4 +166,6 @@ public class Student {
                 .map(Skill::getName)
                 .collect(Collectors.toSet());
     }
+
+
 }

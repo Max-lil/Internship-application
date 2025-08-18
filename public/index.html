@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="sv"> <!-- Språk för svenska användare -->
+  <head>
+    <!-- Teckenkodning - viktigt för åäö -->
+    <meta charset="utf-8" />
+    
+    <!-- Favicon - lilla ikonen i browser-fliken -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    
+    <!-- Responsiv design - fungerar på mobiler -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <!-- Färg i adressfältet på mobiler -->
+    <meta name="theme-color" content="#667eea" />
+    
+    <!-- Beskrivning som visas i Google-sökningar -->
+    <meta
+      name="description"
+      content="Internship Portal - Hantera studenter och företag för praktikplatser"
+    />
+    
+    <!-- Ikon när man sparar på mobil hemskärm -->
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    
+    <!-- Manifest för PWA (Progressive Web App) -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    
+    <!-- Titel som visas i browser-fliken -->
+    <title>Internship Portal</title>
+  </head>
+  <body>
+    <!-- Meddelande om JavaScript är avstängt -->
+    <noscript>Du behöver aktivera JavaScript för att köra denna app.</noscript>
+    
+    <!-- VIKTIGAST: Här kommer React att sätta in allt innehåll från App.js -->
+    <div id="root"></div>
+    
+    <!-- React lägger till <script>-taggar här automatiskt när du kör npm start -->
+  </body>
+</html>

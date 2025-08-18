@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/register/student")
 public class StudentRegistration {
@@ -29,7 +30,7 @@ public class StudentRegistration {
             @RequestParam String phoneNumber,
             @RequestParam(required = false) MultipartFile cv,
             @RequestParam(required = false) List<String> skills,
-            @RequestParam(required = false) String education
+            @RequestParam(required = true) String education
     ) {
         if (firstName == null || firstName.trim().isEmpty()) {
             throw new InvalidInputException("Förnamn får inte vara tomt.");
