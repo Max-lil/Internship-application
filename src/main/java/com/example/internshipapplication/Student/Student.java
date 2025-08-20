@@ -34,13 +34,13 @@ public class Student {
     private String password;
 
     @JsonProperty("phone_number")
-    @Column(nullable = false)
+    @Column(nullable = true, unique = true)
     private String phoneNumber;
 
     @Column(name = "created_at", updatable = false, insertable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false )
+
     private String education;
 
     @Column(name = "cv_file", nullable = true)

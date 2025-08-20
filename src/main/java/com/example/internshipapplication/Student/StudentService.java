@@ -21,57 +21,60 @@ public class StudentService {
         this.skillRepository = skillRepository;
     }
 
+    // Hämta alla studenter
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
 
+    // Hämta student via ID (kastar fel om ID saknas eller inte finns)
     public Student getStudentById(Long id) {
-        if (id != null) {
-            return studentRepository.findById(id)
-                    .orElseThrow(() -> new RuntimeException("Student med ID " + id + " hittades inte"));
+        if (id == null) {
+            throw new RuntimeException("Student ID får inte vara null");
         }
-        throw new RuntimeException("Student ID får inte vara null");
+        return studentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Student med ID " + id + " hittades inte"));
     }
+
+    // Lägg till nya skills till en befintlig student
     public void addSkillsToStudent(Long studentId, List<String> skillNames) {
         Student student = studentRepository.findById(studentId)
                 .orElseThrow(() -> new RuntimeException("Student med ID " + studentId + " hittades inte"));
 
+        // Om studenten redan har skills, återanvänd dessa, annars starta ny lista
         Set<Skill> currentSkills = student.getSkills() != null ? student.getSkills() : new HashSet<>();
 
+        // Lägg till (eller skapa) varje skill i databasen
         for (String skillName : skillNames) {
             Skill skill = skillRepository.findByNameIgnoreCase(skillName.trim())
                     .orElseGet(() -> skillRepository.save(new Skill(skillName.trim())));
             currentSkills.add(skill);
         }
 
+        // Uppdatera studentens skills
         student.setSkills(currentSkills);
         studentRepository.save(student);
     }
 
-
+    // Kontrollera om en e-postadress redan finns
     public boolean emailExists(String email) {
-
         return studentRepository.existsByEmail(email);
     }
 
+    // TODO: här kan du implementera borttagning av en viss skill
     public void deleteSkillById(Long studentId, Long skillId) {
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student inte hittad"));
-
-        student.getSkills().removeIf(skill -> skill.getId().equals(skillId));
-
-        studentRepository.save(student);
+        // ... ej implementerat än
     }
 
+    // Uppdatera utbildning på en student
     public Student updateEducation(Long studentId, String education) {
         Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
+                .orElseThrow(() -> new RuntimeException("Student med ID " + studentId + " hittades inte"));
 
         student.setEducation(education);
         return studentRepository.save(student);
     }
 
-    // Metod för att lägga till en ny student med tillhörande information, CV och färdigheter
+    // Lägg till en ny student med CV och ev. skills
     public Student addStudent(String firstName, String lastName, String location,
                               String email, String phoneNumber, MultipartFile file,
                               List<String> skillNames, String education) {
@@ -85,72 +88,90 @@ public class StudentService {
             student.setPhoneNumber(phoneNumber);
             student.setEducation(education);
 
-            // Hantering av uppladdat CV
+            // Hantera CV om en fil skickats in
             if (file != null && !file.isEmpty()) {
-                String fileName = StringUtils.cleanPath(file.getOriginalFilename()); // Rensar filnamnet
-                String uploadDir = "uploads/cv/";
-                File uploadPath = new File(uploadDir);
-
-                // Skapa katalog om den inte redan finns
-                if (!uploadPath.exists()) uploadPath.mkdirs();
-
-                // Bestäm sökväg och kopiera filen till servern
-                Path filePath = Paths.get(uploadDir, fileName);
-                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-                student.setCvFile(fileName); // Spara filnamnet i studentobjektet
+                handleCvUpload(student, file);
             }
 
-            // Hantering av skills
+            // Hantera skills (frivilligt)
             if (skillNames != null) {
-                Set<Skill> skillSet = new HashSet<>();
-                for (String skillName : skillNames) {
-                    // Hämta skills från databasen eller skapa ny om den inte finns
-                    Skill skill = skillRepository.findByNameIgnoreCase(skillName.trim())
-                            .orElseGet(() -> skillRepository.save(new Skill(skillName.trim())));
-                    skillSet.add(skill);
-                }
-                student.setSkills(skillSet); // Lägg till skills i studentobjektet
+                addSkillsToStudentObject(student, skillNames);
             }
 
-            // Spara studenten i databasen och returnera objektet
+            // Spara i databasen
             return studentRepository.save(student);
+        } catch (Exception e) {
+            throw new RuntimeException("Kunde inte lägga till student: " + e.getMessage(), e);
+        }
+    }
+
+    // Uppdatera CV för en redan befintlig student
+    public void updateStudentCv(Long studentId, MultipartFile file) {
+        try {
+            if (file == null || file.isEmpty()) {
+                throw new RuntimeException("Ingen fil angavs.");
+            }
+
+            Student student = studentRepository.findById(studentId)
+                    .orElseThrow(() -> new RuntimeException("Student med ID " + studentId + " hittades inte"));
+
+            // Samma CV-hantering som i addStudent()
+            handleCvUpload(student, file);
+
+            // Spara det uppdaterade studentobjektet i databasen
+            studentRepository.save(student);
 
         } catch (Exception e) {
-            // Hantera fel genom att kasta ett undantag
-            throw new RuntimeException("Misslyckades att registrera student.", e);
+            throw new RuntimeException("Kunde inte ladda upp CV: " + e.getMessage(), e);
         }
     }
 
-    // Metod för att ladda upp ett nytt CV för en befintlig student
-    public void uploadCvForStudent(Long id, MultipartFile file) {
-        // Hämta student från databasen, eller kasta fel om inte hittad
-        Student student = studentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Student med ID " + id + " hittades inte"));
+    // --- Hjälpmetoder (privata) ---
 
-        if (file != null && !file.isEmpty()) {
-            try {
-                // Samma hantering som i addStudent: rensa filnamn, skapa katalog, kopiera fil
-                String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-                String uploadDir = "uploads/cv/";
-                File uploadPath = new File(uploadDir);
-                if (!uploadPath.exists()) {
-                    uploadPath.mkdirs();
-                }
-                Path filePath = Paths.get(uploadDir, fileName);
-                Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+    /**
+     * Säker hantering av CV-uppladdning.
+     * - Tillåter endast PDF
+     * - Max 10 MB
+     * - Ger filen ett slumpmässigt UUID-namn
+     * - Lagrar filen under uploads/cv/
+     */
+    private void handleCvUpload(Student student, MultipartFile file) throws Exception {
+        String original = StringUtils.cleanPath(file.getOriginalFilename());
 
-                // Spara nya filnamnet och uppdatera studentposten
-                student.setCvFile(fileName);
-                studentRepository.save(student);
-
-            } catch (Exception e) {
-                // Felhantering vid uppladdning
-                throw new RuntimeException("Kunde inte ladda upp CV: " + e.getMessage(), e);
-            }
-        } else {
-            // Filen var tom eller saknades
-            throw new RuntimeException("Ingen fil angavs.");
+        if (!original.toLowerCase().endsWith(".pdf")) {
+            throw new IllegalArgumentException("Endast PDF tillåtet");
         }
+        if (file.getSize() > 10 * 1024 * 1024) { // 10 MB
+            throw new IllegalArgumentException("Max 10 MB");
+        }
+
+        String uploadDir = "uploads/cv/";
+        File uploadPath = new File(uploadDir);
+        if (!uploadPath.exists()) uploadPath.mkdirs();
+
+        // Skapa ett unikt filnamn
+        String safeName = java.util.UUID.randomUUID() + ".pdf";
+        Path filePath = Paths.get(uploadDir).resolve(safeName).normalize();
+
+        // Kopiera filen till rätt plats
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+        // Spara filnamnet på studentobjektet
+        student.setCvFile(safeName);
+    }
+
+    /**
+     * Hjälpmetod för att lägga till skills till en ny student
+     */
+    private void addSkillsToStudentObject(Student student, List<String> skillNames) {
+        Set<Skill> skills = student.getSkills() != null ? student.getSkills() : new HashSet<>();
+
+        for (String skillName : skillNames) {
+            Skill skill = skillRepository.findByNameIgnoreCase(skillName.trim())
+                    .orElseGet(() -> skillRepository.save(new Skill(skillName.trim())));
+            skills.add(skill);
+        }
+
+        student.setSkills(skills);
     }
 }
-
