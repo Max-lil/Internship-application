@@ -1,6 +1,7 @@
 package com.example.internshipapplication.Application;
 
 import com.example.internshipapplication.Company.Company;
+import com.example.internshipapplication.JobAd.JobAd;
 import com.example.internshipapplication.Student.Student;
 import jakarta.persistence.*;
 
@@ -27,6 +28,10 @@ import java.time.LocalDateTime;
 
         @Column(name = "application_date")
         private LocalDateTime applicationDate = LocalDateTime.now();
+
+        @ManyToOne
+        @JoinColumn(name = "job_ad_id", nullable = false)
+        private JobAd jobAd;
 
         public Long getId() {
             return id;
@@ -74,5 +79,12 @@ import java.time.LocalDateTime;
 
         public void setApplicationDate(LocalDateTime applicationDate) {
             this.applicationDate = applicationDate;
+        }
+
+        public JobAd getJobAd() {
+            return jobAd;
+        }
+        public void setJobAd(JobAd jobAd) {
+            this.jobAd = jobAd;
         }
     }

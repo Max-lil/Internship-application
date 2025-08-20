@@ -18,23 +18,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/public/**", "/css/**", "/js/**").permitAll()
-                        // Exempel på rollbaserade regler (kan justeras):
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/user/**").hasAnyRole("STUDENT","ADMIN")
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll() // Tillåter alla requests utan inloggning
                 )
-                .formLogin(form -> form
-                        // .loginPage("/login") // Avkommentera om du har en egen vy
-                        .defaultSuccessUrl("/home", true)
-                        .permitAll()
-                )
-                // Konfigurera logout
-                .logout(logout -> logout
-                        
-                        .permitAll()
-
-                );
+                .csrf(csrf -> csrf.disable()); // Inaktivera CSRF för att tillåta POST med Postman
 
         return http.build();
     }
