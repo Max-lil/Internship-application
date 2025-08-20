@@ -15,10 +15,13 @@ public class ApplicationController {
     public ApplicationController(ApplicationService applicationService) {this.applicationService = applicationService;}
 
     @PostMapping("/create")
-    public ResponseEntity<?> createNewApplication(@RequestBody Application application) {
+    public ResponseEntity<?> createNewApplication(
+            @RequestParam Long studentId,
+            @RequestParam Long jobAdId,
+            @RequestParam(required = false) String message) {
         try {
-            Application saved = applicationService.createNewApplication(application);
-            return ResponseEntity.ok("Sparandet lyckades!");
+            Application saved = applicationService.createNewApplication(studentId, jobAdId, message);
+            return ResponseEntity.ok("Ansökan skickad!");
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
