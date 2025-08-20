@@ -42,7 +42,7 @@ public class StudentController {
             @RequestParam("cv") MultipartFile file
     ) {
         try {
-            studentService.uploadCvForStudent(id, file);
+            studentService.updateStudentCv(id, file); // 👈 rätt metodnamn
             return ResponseEntity.ok("CV uppladdat!");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -50,6 +50,7 @@ public class StudentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fel vid uppladdning av CV.");
         }
     }
+
     @GetMapping("/{id}/skills")
     public ResponseEntity<Set<String>> getStudentSkills(@PathVariable Long id) {
         Student student = studentService.getStudentById(id);
