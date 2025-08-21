@@ -369,3 +369,33 @@ body {
     padding: 1rem;                       /* Större padding på mobil (lättare att trycka) */
   }
 }
+
+  .snabblänkar {
+   display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;         /* Radbryter snyggt på mobil */
+  }
+
+  .snabblänkar-btn {
+appearance: none;      /* ta bort browser-standard */
+  -webkit-appearance: none;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  cursor: pointer;       /* så man får "hand" på hover */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: transform .1s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+  }
+
+  .snabblänkar-btn:hover {
+  border-color: var(--primary-blue);
+  background: #fff;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
+  }

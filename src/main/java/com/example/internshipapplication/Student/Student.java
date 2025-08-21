@@ -40,7 +40,6 @@ public class Student {
     @Column(name = "created_at", updatable = false, insertable = false)
     private LocalDateTime createdAt;
 
-
     private String education;
 
     @Column(name = "cv_file", nullable = true)
@@ -68,12 +67,13 @@ public class Student {
 
     }
 
-    public Student(String firstName, String lastName, String location, String email, String phoneNumber) {
+    public Student(String firstName, String lastName, String location, String email, String phoneNumber, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.location = location;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.password = password;
     }
 
     public Long getId() {

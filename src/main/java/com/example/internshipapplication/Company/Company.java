@@ -25,6 +25,9 @@ public class Company {
     @Column(name = "created_at", updatable = false, insertable = false)
     private LocalDateTime createdAt;
 
+    @Column(name = "password")
+    private String password;
+
     public Company() {
 
     }
@@ -90,5 +93,9 @@ public class Company {
 
     public void setIndustry(String industry) {
         this.industry = industry;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
