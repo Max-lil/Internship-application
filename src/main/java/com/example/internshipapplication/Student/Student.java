@@ -30,17 +30,16 @@ public class Student {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String password;
 
     @JsonProperty("phone_number")
-    @Column(nullable = false)
+    @Column(nullable = true, unique = true)
     private String phoneNumber;
 
     @Column(name = "created_at", updatable = false, insertable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false )
     private String education;
 
     @Column(name = "cv_file", nullable = true)
@@ -68,12 +67,13 @@ public class Student {
 
     }
 
-    public Student(String firstName, String lastName, String location, String email, String phoneNumber) {
+    public Student(String firstName, String lastName, String location, String email, String phoneNumber, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.location = location;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.password = password;
     }
 
     public Long getId() {
@@ -166,6 +166,4 @@ public class Student {
                 .map(Skill::getName)
                 .collect(Collectors.toSet());
     }
-
-
 }

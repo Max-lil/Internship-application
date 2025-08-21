@@ -11,11 +11,16 @@ import {
   updateStudentEducation 
 } from './api/studentApi';
 import { getAllCompanies } from './api/companyApi';
+import Snabblänkar from './Snabblänkar';
+import Login from './Login';
 
 // HUVUDFUNKTION - Här börjar hela appen
 function App() {
   
+  
+  
   // REACT SKAPAR MINNE FÖR APPEN (useState = minneslådor):
+  
   const [currentPage, setCurrentPage] = useState('home');     // Kommer ihåg vilken sida som visas (startar med 'home')
   const [students, setStudents] = useState([]);               // Kommer ihåg studentdata (startar tom [])
   const [companies, setCompanies] = useState([]);             // Kommer ihåg företagsdata (startar tom [])
@@ -55,8 +60,19 @@ function App() {
     });
   };
 
+  // FUNKTION SOM KÖRS NÄR ANVÄNDAREN KLICKAR "VISA FÖRETAG" (Home-page)
+  const home_showCompanies = () => {
+    // Hämtar företagsdata från Spring Boot API
+    getAllCompanies().then(data => {
+      setCompanies(data);                            // SPARAR företagsdata i minneslådan
+      setCurrentPage('home_companies');                   // ÄNDRAR sida till 'companies'
+      // ↑ React ritar om skärmen igen!
+    });
+  };
+
   // Funktioner för portal-navigering
   const showAdminPortal = () => {
+    
     setCurrentPage('admin-portal');
   };
 
@@ -205,6 +221,7 @@ function App() {
   if (currentPage === 'admin-portal') {
     return (
       <div className="App">
+        <Snabblänkar setCurrentPage={setCurrentPage} />
         <button onClick={() => setCurrentPage('home')} className="back-button">
           ← Tillbaka till startsidan
         </button>
@@ -232,6 +249,7 @@ function App() {
   if (currentPage === 'student-portal') {
     return (
       <div className="App">
+        <Snabblänkar setCurrentPage={setCurrentPage} />
         <button onClick={() => setCurrentPage('home')} className="back-button">
           ← Tillbaka till startsidan
         </button>
@@ -250,7 +268,17 @@ function App() {
             <h3>Hantera Profil</h3>
             <p>Visa profil, ladda upp CV, hantera skills</p>
           </div>
-        </div>
+
+          <div className="option-card" onClick={showCompanies}>
+            <div className="icon">🏢</div>
+            <h3>Visa Företag</h3>
+            <p>Se alla registrerade företag</p>
+            </div>
+            </div>
+            {/* Footer */}
+            <div className="footer">
+              <p>&copy; 2025 Internship Portal - Enkel och effektiv praktikhantering</p>
+            </div>
       </div>
     );
   }
@@ -259,6 +287,7 @@ function App() {
   if (currentPage === 'company-portal') {
     return (
       <div className="App">
+        <Snabblänkar setCurrentPage={setCurrentPage} />
         <button onClick={() => setCurrentPage('home')} className="back-button">
           ← Tillbaka till startsidan
         </button>
@@ -278,6 +307,22 @@ function App() {
             <p>Skapa och hantera praktikplatser</p>
           </div>
         </div>
+        {/* Footer */}
+      <div className="footer">
+        <p>&copy; 2025 Internship Portal - Enkel och effektiv praktikhantering</p>
+      </div>
+      </div>
+    );
+  }
+
+  if (currentPage === 'login') {
+    return (
+      <div className="App">
+        <button onClick={() => setCurrentPage('home')} className="back-button">
+          ← Tillbaka till startsidan
+        </button>
+        <h1>Logga in</h1>
+        <Login setCurrentPage={setCurrentPage} />
       </div>
     );
   }
@@ -413,6 +458,27 @@ function App() {
     );
   }
 
+    // Visa företag (Home_page-funktionalitet)
+  if (currentPage === 'home_companies') {
+    return (
+      <div className="App">
+        <button onClick={() => setCurrentPage('landing-container')} className="back-button">
+          ← Tillbaka till Start
+        </button>
+        
+        <h1>Företag:</h1>
+        
+        {companies.map(company => (
+          <div key={company.id} className="student-card">
+            <p><strong>{company.name}</strong></p>
+            <p>Bransch: {company.industry}</p>
+            <p>Plats: {company.location}</p>
+          </div>
+        ))}
+      </div>
+    );
+  }
+
   // Registrera student
   if (currentPage === 'register-student') {
     return (
@@ -498,26 +564,35 @@ function App() {
 
   // Hemsida med 3 portaler 
   return (
+
     <div className="landing-container">
       <h1>Internship Portal</h1>
+      <Snabblänkar setCurrentPage={setCurrentPage} />
       <p className="subtitle"></p>
       
       <div className="options">
-        {/* PORTAL 1: Admin Portal */}
+        {/* PORTAL 1: Visa alla företag */}
+        <div className="option-card" onClick={home_showCompanies}>
+          <div className="icon">📋</div>
+          <h3>Visa företag</h3>
+          <p>Se alla företag som är registrerade på hemsidan</p>
+        </div>
+        
+        {/* PORTAL 2: Admin Portal */}
         <div className="option-card" onClick={showAdminPortal}>
           <div className="icon">⚙️</div>
           <h3>Admin Portal</h3>
           <p>Hantera studenter, företag och systemfunktioner</p>
         </div>
         
-        {/* PORTAL 2: Student Portal */}
+        {/* PORTAL 3: Student Portal */}
         <div className="option-card" onClick={showStudentPortal}>
           <div className="icon">👨‍🎓</div>
           <h3>Student Portal</h3>
           <p>Registrera dig eller hantera din profil</p>
         </div>
         
-        {/* PORTAL 3: Företag Portal */}
+        {/* PORTAL 4: Företag Portal */}
         <div className="option-card" onClick={showCompanyPortal}>
           <div className="icon">🏢</div>
           <h3>Företag Portal</h3>
@@ -532,6 +607,7 @@ function App() {
     </div>
   );
 }
+
 
 // EXPORTERAR App så den kan användas i index.js
 export default App;
