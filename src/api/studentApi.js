@@ -26,6 +26,7 @@ export const registerStudent = async (studentData) => {
     formData.append('location', studentData.location);
     formData.append('phoneNumber', studentData.phoneNumber);
     formData.append('education', studentData.education);
+    formData.append('password', studentData.password);
     
     console.log('Skickar data:', studentData); // DEBUG
     
