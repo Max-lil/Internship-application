@@ -17,7 +17,6 @@ public class Company {
 
     private String industry;
     private String location;
-    private String period;
 
     @Column(nullable = false)
     private String email;
@@ -25,19 +24,19 @@ public class Company {
     @Column(name = "created_at", updatable = false, insertable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     public Company() {
 
     }
 
-    public Company(String name, String location, String industry, String period, String email) {
+    public Company(String name, String location, String industry, String email, String password) {
         this.name = name;
         this.location = location;
         this.industry = industry;
-        this.period = period;
         this.email = email;
+        this.password = password;
     }
 
     public Long getId() {
@@ -64,13 +63,6 @@ public class Company {
         this.location = location;
     }
 
-    public String getPeriod() {
-        return period;
-    }
-
-    public void setPeriod(String period) {
-        this.period = period;
-    }
 
     public String getEmail() {
         return email;

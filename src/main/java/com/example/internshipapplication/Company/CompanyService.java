@@ -7,7 +7,7 @@ import java.util.List;
 
 @Service
 public class CompanyService {
-    private CompanyRepository companyRepository;
+    private final CompanyRepository companyRepository;
     public CompanyService(CompanyRepository companyRepository) {
         this.companyRepository = companyRepository;
     }
@@ -33,13 +33,6 @@ public class CompanyService {
     public List <Company> getByIndustry(String industry) {
         if (industry != null) {
             return companyRepository.findByIndustryContainingIgnoreCase(industry);
-        }
-        return null;
-    }
-
-    public List <Company> findByPeriodIgnoreCase(String period) {
-        if (period != null) {
-            return companyRepository.findByPeriodIgnoreCase(period);
         }
         return null;
     }

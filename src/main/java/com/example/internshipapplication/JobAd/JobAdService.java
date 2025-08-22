@@ -22,6 +22,7 @@ public class JobAdService {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new RuntimeException("Företag kan ej hittas"));
         jobAd.setCompany(company);
+        jobAd.setLocation(company.getLocation());
         return jobAdRepository.save(jobAd);
     }
 
