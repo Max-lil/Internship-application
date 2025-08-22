@@ -30,7 +30,8 @@ function App() {
     email: '',
     location: '',
     phoneNumber: '',
-    education: '' 
+    education: '',
+    password: ''
   }); 
   
   // State för att hantera student-profil funktionalitet
@@ -93,7 +94,8 @@ function App() {
       email: '',
       location: '',
       phoneNumber: '',
-      education: ''
+      education: '',
+      password: ''
     });
   };
 
@@ -149,7 +151,8 @@ function App() {
         email: '',
         location: '',
         phoneNumber: '',
-        education: ''
+        education: '',
+        password: ''
       });
       
       setCurrentPage('home');   // Gå tillbaka till startsidan
@@ -551,6 +554,17 @@ function App() {
               type="text"
               name="education"
               value={formData.education}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+
+          <div>
+            <label>Lösenord:</label>
+            <input
+              type="text"
+              name="password"
+              value={formData.password}
               onChange={handleInputChange}
               required
             />

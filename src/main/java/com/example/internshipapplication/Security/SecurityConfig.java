@@ -35,7 +35,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable()) // DEV: enklast. (Aktivera sen om du vill.)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/logout", "company/all").permitAll()
+                        .requestMatchers("/login", "/logout", "company/all", "/register/student").permitAll()
                         .requestMatchers("/students/**").hasRole("STUDENT")
                         .requestMatchers("/companies/**").hasRole("COMPANY")
                         .anyRequest().authenticated()

@@ -77,7 +77,7 @@ public class StudentService {
     // Lägg till en ny student med CV och ev. skills
     public Student addStudent(String firstName, String lastName, String location,
                               String email, String phoneNumber, MultipartFile file,
-                              List<String> skillNames, String education) {
+                              List<String> skillNames, String education, String password) {
         try {
             // Skapa ett nytt Student-objekt
             Student student = new Student();
@@ -87,6 +87,7 @@ public class StudentService {
             student.setEmail(email);
             student.setPhoneNumber(phoneNumber);
             student.setEducation(education);
+            student.setPassword(password);
 
             // Hantera CV om en fil skickats in
             if (file != null && !file.isEmpty()) {
