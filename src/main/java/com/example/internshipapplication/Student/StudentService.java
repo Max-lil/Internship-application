@@ -1,5 +1,7 @@
 package com.example.internshipapplication.Student;
 
+import com.example.internshipapplication.JobAd.JobAd;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -175,4 +177,5 @@ public class StudentService {
 
         student.setSkills(skills);
     }
+
 }
