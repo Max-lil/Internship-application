@@ -24,6 +24,7 @@ public class CompanyController {
     public List <Company> getCompanyByName(@PathVariable String name) {
         return companyService.getByName(name);
     }
+
     @GetMapping("/location/{location}")
     public List <Company> getCompanyByLocation(@PathVariable String location) {
         return companyService.getByLocation(location);

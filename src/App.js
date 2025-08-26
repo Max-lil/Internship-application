@@ -10,7 +10,7 @@ import {
   uploadCvForStudent,
   updateStudentEducation 
 } from './api/studentApi';
-import { getAllCompanies } from './api/companyApi';
+import { getAllCompanies, registerCompany } from './api/companyApi';
 import Snabblänkar from './Snabblänkar';
 import Login from './Login';
 
@@ -42,6 +42,13 @@ function App() {
   });
   const [jobAdStatus, setJobAdStatus] = useState(null);
   const [jobAdError, setJobAdError] = useState("");
+  const [companyForm, setCompanyForm] = useState({
+    name: '',
+    email: '',
+    location: '',
+    industry: '',
+    password: ''
+  });
   
   // State för att hantera student-profil funktionalitet
   const [currentStudent, setCurrentStudent] = useState(null); // Sparar vald students data
@@ -208,6 +215,41 @@ function App() {
       password: ''
     });
   }
+
+  const showCompanyRegistration = () => {
+    setCurrentPage('register-company');
+    setCompanyForm({
+      name: '',
+      email: '',
+      location: '',
+      industry: '',
+      password: ''
+    });
+  };
+
+  const handleCompanyInput = (e) => {
+    const { name, value } = e.target;
+    setCompanyForm(prev => ({ ...prev, [name]: value}));
+  };
+
+  const handleCompanySubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await registerCompany(companyForm);
+      alert('Företag registrerat!');
+      setCompanyForm({
+        name: '',
+        email: '',
+        location: '',
+        industry: '',
+        password: ''
+      });
+      setCurrentPage('home');
+    } catch (err) {
+      alert('Något gick fel vid företagsregistrering!');
+      console.error(err);
+    }
+  };
 
     const showCompanyJobAdRegistration = () => {
       setCurrentPage('register-jobad');
@@ -748,6 +790,72 @@ function App() {
     );
   }
 
+  //Registrera
+  if (currentPage === 'register-company') {
+    return (
+      <div className='App'>
+        <button onClick={() => setCurrentPage('home')} className='back-button'>
+          ← Tillbaka till startsidan
+        </button>
+        <h1>Registrera nytt företag</h1>
+
+        <form onSubmit={handleCompanySubmit} className='student-form'>
+          <div>
+            <label>Företagsnamn:</label>
+            <input
+              type='text'
+              name='name'
+              value={companyForm.name}
+              onChange={handleCompanyInput}
+              required
+              />
+          </div>
+          <div>
+            <label>Email:</label>
+            <input
+              type='text'
+              name='email'
+              value={companyForm.email}
+              onChange={handleCompanyInput}
+              required
+              />
+          </div>
+          <div>
+            <label>Ort:</label>
+            <input
+              type='text'
+              name='location'
+              value={companyForm.location}
+              onChange={handleCompanyInput}
+              required
+              />
+          </div>
+          <div>
+            <label>Bransch:</label>
+            <input
+              type='text'
+              name='industry'
+              value={companyForm.industry}
+              onChange={handleCompanyInput}
+              required
+              />
+          </div>
+          <div>
+            <label>Lösenord:</label>
+            <input
+              type='text'
+              name='password'
+              value={companyForm.password}
+              onChange={handleCompanyInput}
+              required
+              />
+          </div>
+          <button type='submit'>Registrera företag</button>
+        </form>
+      </div>
+    )
+  }
+
   // Hemsida med 3 portaler 
   return (
 
@@ -764,33 +872,39 @@ function App() {
           <p>Se alla företag som är registrerade på hemsidan</p>
         </div>
         
-        {/* PORTAL 2: Admin Portal */}
+        {/* PORTAL 2: Admin Portal
         <div className="option-card" onClick={showAdminPortal}>
           <div className="icon">⚙️</div>
           <h3>Admin Portal</h3>
           <p>Hantera studenter, företag och systemfunktioner</p>
-        </div>
+        </div>*/}
 
         {/* PORTAL 2: Registrera student */}
         <div className="option-card" onClick={showStudentRegistration}>
           <div className="icon">📝</div>
-          <h3>Registrera dig</h3>
+          <h3>Registrera student</h3>
           <p>Skapa ett nytt studentkonto</p>
         </div>
+
+        <div className="option-card" onClick={showCompanyRegistration}>
+          <div className="icon">🏢</div>
+          <h3>Registrera företag</h3>
+          <p>Skapa ett nytt företagskonto</p>
+        </div>
         
-        {/* PORTAL 3: Student Portal */}
+        {/* PORTAL 3: Student Portal
         <div className="option-card" onClick={showStudentPortal}>
           <div className="icon">👨‍🎓</div>
           <h3>Student Portal</h3>
           <p>Registrera dig eller hantera din profil</p>
-        </div>
+        </div>*/}
         
-        {/* PORTAL 4: Företag Portal */}
+        {/* PORTAL 4: Företag Portal
         <div className="option-card" onClick={showCompanyPortal}>
           <div className="icon">🏢</div>
           <h3>Företag Portal</h3>
           <p>Registrera företag och hantera praktikplatser</p>
-        </div>
+        </div>*/}
 
         <div className="option-card" onClick={showLoginPortal}>
           <div className="icon">🏢</div>
