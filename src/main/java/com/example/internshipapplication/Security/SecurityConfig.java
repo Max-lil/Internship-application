@@ -2,6 +2,7 @@ package com.example.internshipapplication.Security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -35,9 +36,12 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable()) // DEV: enklast. (Aktivera sen om du vill.)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/logout", "company/all", "/register/student", "/register/company").permitAll()
+                        .requestMatchers("/login", "/logout", "company/**", "/register/student", "/register/company", "/jobads/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/me").permitAll()
                         .requestMatchers("/students/**").hasRole("STUDENT")
-                        .requestMatchers("/companies/**", "/jobads/**", "/company/me", "/jobads/create/**", "/me").hasRole("COMPANY")
+                        .requestMatchers("/companies/**", "/company/me", "/jobads/create/**", "/me").hasRole("COMPANY")
+                        .requestMatchers(HttpMethod.POST, "/application/apply/**").hasRole("STUDENT")
+                        .requestMatchers(HttpMethod.POST, "/jobads/create/**").hasRole("COMPANY")
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)

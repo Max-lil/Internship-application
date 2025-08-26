@@ -41,6 +41,7 @@ public class ApplicationService {
         application.setJobAd(jobAd);
         application.setMessage(message);
         application.setCvFile(student.getCvFile());
+        application.setJobAd(jobAd);
         return applicationRepository.save(application);
 
     }

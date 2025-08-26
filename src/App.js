@@ -1,7 +1,7 @@
 // App.js - Landningssida för Internship Portal med Portal-struktur
 
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import { 
   getAllStudents, 
   registerStudent, 
@@ -49,6 +49,8 @@ function App() {
     industry: '',
     password: ''
   });
+  const [companyJobs, setCompanyJobs] = useState({});
+  const [jobsOpen, setJobsOpen] = useState({});
   
   // State för att hantera student-profil funktionalitet
   const [currentStudent, setCurrentStudent] = useState(null); // Sparar vald students data
@@ -58,6 +60,7 @@ function App() {
     //JOBAD SAKER
     const API_BASE = "http://localhost:8080"
     const JOB_ADS_BASE = `${API_BASE}/jobads`;
+    const APPLICATION_BASE = `${API_BASE}/application`;
 
     const handleJobAdInput = (e) => {
       const {name, value } = e.target;
@@ -122,9 +125,78 @@ function App() {
         : "❌ Något gick fel. Försök igen."
       );
     }
+    } 
+
+async function toggleJobs(companyId) {
+  const open = !!jobsOpen[companyId];
+  if (open) {
+    setJobsOpen(p => ({ ...p, [companyId]: false }));
+    return;
+  }
+
+  try {
+    const res = await fetch(`${JOB_ADS_BASE}/company/${companyId}`, { credentials: "include" });
+    if (!res.ok) {
+      if (res.status === 401) {
+        alert("401: Inte inloggad. Logga in och prova igen.");
+      } else if (res.status === 403) {
+        alert("403: Åtkomst nekad. Tillåt GET /jobads/** i SecurityConfig (se mitt exempel).");
+      } else {
+        alert(`Kunde inte hämta jobbannonser (HTTP ${res.status}).`);
+      }
+      // säkerställ att state inte blir undefined
+      setCompanyJobs(prev => ({ ...prev, [companyId]: [] }));
+      return;
+    }
+
+    const data = await res.json().catch(() => []);
+    const list = Array.isArray(data) ? data : (Array.isArray(data?.content) ? data.content : []);
+    setCompanyJobs(prev => ({ ...prev, [companyId]: list }));
+    setJobsOpen(p => ({ ...p, [companyId]: true }));
+  } catch (e) {
+    console.error("toggleJobs error:", e);
+    alert("Nätverksfel när jobbannonser skulle hämtas.");
+  }
+}
 
 
 
+    async function applyForJobAd(jobAdId) {
+      try {
+        const meRes = await fetch(`${API_BASE}/me`, { credentials: "include" });
+        if (!meRes.ok) {
+          alert("Du måste vara inloggad som student för att ansöka.");
+          setCurrentPage("login");
+          return;
+        }
+        const me = await meRes.json();
+        if (!me.roles?.includes("ROLE_STUDENT")) {
+          alert("Endast studenter kan ansöka. Logga in som student.");
+          return;
+        }
+
+        const res = await fetch(`${APPLICATION_BASE}/apply/${jobAdId}`, {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: "" })
+        });
+
+        if (res.status === 401 || res.status === 403) {
+          alert("Du måste vara inloggad som student för att ansöka.");
+          return;
+        }
+        if (!res.ok) {
+          const txt = await res.text().catch(() => "");
+          alert(txt || "Kunde inte skicka ansökan.");
+          return;
+        }
+
+        alert("✅ Ansökan skickad!");
+      } catch (err) {
+        console.error("applyForJobAd error:", err);
+        alert("Kunde inte nå servern. Är backend igång på http://localhost:8080?");
+      }
     }
 
     //AUTO-DIRIGERAR NÄR SIDAN LADDATS OM
@@ -608,6 +680,26 @@ function App() {
             <p><strong>{company.name}</strong></p>
             <p>Bransch: {company.industry}</p>
             <p>Plats: {company.location}</p>
+            <button className="link-btn" onClick={() => toggleJobs(company.id)}>
+              {jobsOpen?.[company.id] ? "Dölj jobbannonser" : "Visa jobbannonser"}
+            </button>
+
+            {jobsOpen?.[company.id] && (
+              <div className="joblist">
+                {(companyJobs?.[company.id] ?? []).length ? (
+                  companyJobs[company.id].map(ad => (
+                    <div key={ad.id} className="jobrow">
+                      <div className="jobtitle">{ad.title}</div>
+                      <button className="apply-btn" onClick={() => applyForJobAd(ad.id)}>
+                        Ansök
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="jobempty">Inga aktiva annonser.</div>
+                )}
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -629,11 +721,32 @@ function App() {
             <p><strong>{company.name}</strong></p>
             <p>Bransch: {company.industry}</p>
             <p>Plats: {company.location}</p>
-          </div>
-        ))}
-      </div>
-    );
-  }
+            <button className="link-btn" onClick={() => toggleJobs(company.id)}>
+              {jobsOpen?.[company.id] ? "Dölj jobbannonser" : "Visa jobbannonser"}
+            </button>
+
+            {jobsOpen?.[company.id] && (
+              <div className="joblist">
+                {(companyJobs?.[company.id] ?? []).length ? (
+                  companyJobs[company.id].map(ad => (
+                    <div key={ad.id} className="jobrow">
+                      <div className="jobtitle">{ad.title}</div>
+                      <button className="apply-btn" onClick={() => applyForJobAd(ad.id)}>
+                        Ansök
+                      </button>
+                    </div>
+                  ))
+                ) : (
+                  <div className="jobempty">Inga aktiva annonser.</div>
+                )}
+              </div>
+            )}
+
+                      </div>
+                    ))}
+                  </div>
+                );
+              }
 
   //Registrera Jobad
   if (currentPage === 'register-jobad') {

@@ -15,7 +15,7 @@ public class ApplicationController {
 
     public ApplicationController(ApplicationService applicationService) {this.applicationService = applicationService;}
 
-    @PostMapping("/create")
+    /*@PostMapping("/create")
     public ResponseEntity<?> createNewApplication(
             @RequestParam Long studentId,
             @RequestParam Long jobAdId,
@@ -26,7 +26,7 @@ public class ApplicationController {
         } catch (IllegalArgumentException ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
-    }
+    }*/
 
     @GetMapping("/company/{companyId}")
     public List<Application> getApplicationForCompany(@PathVariable Long companyId) {
