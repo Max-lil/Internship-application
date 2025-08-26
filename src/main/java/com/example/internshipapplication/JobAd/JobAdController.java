@@ -3,6 +3,7 @@ package com.example.internshipapplication.JobAd;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -19,9 +20,15 @@ public class JobAdController {
     // Skapa annons åt företag
     @PostMapping("/create/{companyId}")
     public ResponseEntity<JobAd> createJobAd(
-            @PathVariable Long companyId,
-            @RequestBody JobAd jobAd) {
-        JobAd saved = jobAdService.createJobAd(companyId, jobAd);
+            @RequestBody JobAd jobAd,
+            Principal principal) {
+
+        // Hämta det inloggade företagets email från Spring Security
+        String companyEmail = principal.getName();
+
+        // Skapa annons kopplat till det företaget
+        JobAd saved = jobAdService.createJobAdForLoggedInCompany(companyEmail, jobAd);
+
         return ResponseEntity.ok(saved);
     }
 

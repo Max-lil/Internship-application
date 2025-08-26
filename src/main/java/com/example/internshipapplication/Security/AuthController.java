@@ -12,12 +12,9 @@ import java.util.Map;
 public class AuthController {
 
     @GetMapping("/me")
-    public Map<String, Object> me(Authentication auth) {
-        List<String> roles = auth.getAuthorities()
-                .stream().map(GrantedAuthority::getAuthority).toList();
-        return Map.of(
-                "email", auth.getName(),
-                "roles", roles
-        );
+    public Map<String, Object> me(org.springframework.security.core.Authentication auth) {
+        var roles = auth.getAuthorities().stream()
+                .map(a -> a.getAuthority()).toList();
+        return java.util.Map.of("email", auth.getName(), "roles", roles);
     }
 }

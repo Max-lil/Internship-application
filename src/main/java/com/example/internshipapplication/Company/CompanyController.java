@@ -33,7 +33,6 @@ public class CompanyController {
         return companyService.getByIndustry(industry);
     }
 
-
     @DeleteMapping("/companies/{id}")
     public ResponseEntity<Void> removeCompanyById(@PathVariable Long id) {
         companyService.deleteCompanyById(id);
@@ -47,6 +46,17 @@ public class CompanyController {
             return ResponseEntity.ok(company.getEmail());
         } else
             return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> me(org.springframework.security.core.Authentication auth) {
+        return companyService.findByEmail(auth.getName())
+                .map(c -> ResponseEntity.ok(java.util.Map.of(
+                        "id", c.getId(),
+                        "name", c.getName(),
+                        "email", c.getEmail()
+                )))
+                .orElse(ResponseEntity.notFound().build());
     }
 
 }

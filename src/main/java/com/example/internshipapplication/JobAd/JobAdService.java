@@ -40,4 +40,15 @@ public class JobAdService {
         return jobAdRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Kunde ej hitta annonsen"));
     }
+
+    public JobAd createJobAdForLoggedInCompany(String companyEmail, JobAd jobAd) {
+        // Hämta företaget baserat på email
+        Company company = companyRepository.findByEmail(companyEmail)
+                .orElseThrow(() -> new RuntimeException("Företag med email " + companyEmail + " finns inte."));
+
+        // Koppla annonsen till företaget
+        jobAd.setCompany(company);
+
+        return jobAdRepository.save(jobAd);
+    }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import { useState } from "react";
 
 export default function Login({setCurrentPage}) {
@@ -5,12 +6,12 @@ export default function Login({setCurrentPage}) {
     const [password, setPassword] = useState("");
     const [showPW, setShowPw] = useState(false);
     const [status, setStatus] = useState(null); // "ok" | "error" | null
+    const API_BASE = "http://localhost:8080";
 
 
-    const handleSubmit = async (e) => {
+    async function handleSubmit(e) {
         e.preventDefault();
 
-        try {
             const body = new URLSearchParams({email, password}).toString();
 
             const res = await fetch("http://localhost:8080/login", {
@@ -20,26 +21,39 @@ export default function Login({setCurrentPage}) {
                 body
             });
 
-            if (res.ok) {
-              const meRes = await fetch("http://localhost:8080/me", { credentials: "include"});
-              if (meRes.ok) {
-                const me = await meRes.json();
-                if (me.roles?.includes("ROLE_STUDENT")) {
-                  setCurrentPage("student-portal");
-                } else if (me.roles?.includes("ROLE_COMPANY")) {
-                  setCurrentPage("company-portal");
-                } else {
-                  //Om ingen roll anges
-                  setCurrentPage("home");
-                }
-              }
-            } else {
-                setStatus("error")
+            if (!res.ok) {
+              setStatus("error");
+              return;
             }
-        } catch {
-            setStatus("error")
-        }
-  };
+
+            try {
+              const meRes = await fetch(`${API_BASE}/me`, { credentials: "include" });
+              const me = meRes.ok ? await meRes.json() : {};
+              const roles = me?.roles || [];
+
+              if (roles.includes("ROLE_COMPANY")) {
+                const cRes = await fetch(`${API_BASE}/company/me`, { credentials: "include" });
+                if (cRes.ok) {
+                  const company = await cRes.json();
+                  sessionStorage.setItem("companyId", String(company.id));
+                }
+                setCurrentPage("company-portal");
+              } else if (roles.includes("ROLE_STUDENT")) {
+                setCurrentPage("student-portal");
+              } else {
+                setCurrentPage("home");
+              }
+            } catch {
+                console.error("Login error:", err);
+                setStatus?.("error");
+                alert(`Inloggning misslyckades: ${err?.message || "Okänt fel"}`);
+            }
+
+
+                
+                
+            };
+
 
   return(
     <form className="student-form" onSubmit={handleSubmit}>

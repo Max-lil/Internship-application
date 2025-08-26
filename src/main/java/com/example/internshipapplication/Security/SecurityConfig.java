@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/logout", "company/all", "/register/student").permitAll()
                         .requestMatchers("/students/**").hasRole("STUDENT")
-                        .requestMatchers("/companies/**").hasRole("COMPANY")
+                        .requestMatchers("/companies/**", "/jobads/**", "/company/me", "/jobads/create/**", "/me").hasRole("COMPANY")
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)

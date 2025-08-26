@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CompanyService {
@@ -37,6 +38,7 @@ public class CompanyService {
         return null;
     }
 
+
     public Company addCompany(Company company) {
         return companyRepository.save(company);
     }
@@ -48,6 +50,10 @@ public class CompanyService {
 
     public Company getCompanyById(Long id) {
         return companyRepository.findById(id).get();
+    }
+
+    public Optional<Company> findByEmail(String email) {
+        return companyRepository.findByEmail(email);
     }
 
 }

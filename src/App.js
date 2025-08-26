@@ -1,7 +1,7 @@
 // App.js - Landningssida för Internship Portal med Portal-struktur
 
 import './App.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   getAllStudents, 
   registerStudent, 
@@ -33,11 +33,117 @@ function App() {
     education: '',
     password: ''
   }); 
+  const [companyId, setCompanyId] = useState(null);
+  const [jobAdForm, setJobAdForm] = useState({
+    title: "",
+    description: "",
+    location: "",
+    period: ""
+  });
+  const [jobAdStatus, setJobAdStatus] = useState(null);
+  const [jobAdError, setJobAdError] = useState("");
   
   // State för att hantera student-profil funktionalitet
   const [currentStudent, setCurrentStudent] = useState(null); // Sparar vald students data
   const [studentId, setStudentId] = useState('');             // För ID-input i "Hantera Profil"
   const [skillsToAdd, setSkillsToAdd] = useState('');         // För att lägga till skills
+
+    //JOBAD SAKER
+    const API_BASE = "http://localhost:8080"
+    const JOB_ADS_BASE = `${API_BASE}/jobads`;
+
+    const handleJobAdInput = (e) => {
+      const {name, value } = e.target;
+      setJobAdForm(prev => ({ ...prev, [name]: value }));
+    };
+
+    const getCompanyId = async () => {
+      let cid = Number(sessionStorage.getItem("companyId"));
+      if (!cid) {
+        try {
+          const r = await fetch(`${API_BASE}/companies/me`, { credentials: "include" });
+          if (r.ok) {
+            const c = await r.json();
+            cid = c.id;
+            sessionStorage.setItem("companyId", String(cid));
+            setCompanyId(cid);
+          }
+        } catch {}
+      }
+      return cid || null;
+    }
+
+
+    async function createJobAd(e) {
+      e.preventDefault();
+      setJobAdStatus(null);
+      setJobAdError("");
+
+      const cid = await getCompanyId();
+      if (!cid) {
+        setJobAdStatus("error");
+        setJobAdError("❌ Hittar inte företags-ID (companyId). Logga in som företag igen.");
+        return;
+      }
+
+      console.log("POST", `${JOB_ADS_BASE}/create/${cid}`, jobAdForm);
+
+      try {
+        const res = await fetch(`${JOB_ADS_BASE}/create/${cid}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(jobAdForm)
+      });
+      
+      if (!res.ok) {
+        const txt = await res.text().catch(() => "");
+        setJobAdStatus("error");
+        setJobAdError(txt || `Misslyckades (${res.status})`);
+        return;
+      }
+
+      await res.json();
+      setJobAdStatus("ok");
+      setJobAdForm({ title: "", description: "", location: "", period: "" });
+    } catch (err) {
+      console.error("createJobAd error:", err);
+      setJobAdStatus("error");
+      setJobAdError(
+        err?.message?.includes("Failed to fetch")
+        ? "Kunde inte nå servern. Är backend igång på http://localhost:8080?"
+        : "❌ Något gick fel. Försök igen."
+      );
+    }
+
+
+
+    }
+
+    //AUTO-DIRIGERAR NÄR SIDAN LADDATS OM
+  useEffect(() => {
+  (async () => {
+    try {
+      const r = await fetch("http://localhost:8080/me", { credentials: "include" });
+      if (!r.ok) return;
+      const me = await r.json();
+
+      if (me.roles?.includes("ROLE_STUDENT")) { 
+        setCurrentPage("student-portal");
+      } else if (me.roles?.includes("ROLE_COMPANY")) {
+        setCurrentPage("company-portal");
+
+        try {
+          const cRes = await fetch("http://localhost:8080/companies/me", { credentials: "include" });
+          if (cRes.ok) {
+            const c = await cRes.json();
+            setCompanyId(c.id);
+          }
+        }catch {}
+    } 
+  }catch {}
+    })();
+  }, []);
   
   // FUNKTION SOM KÖRS NÄR ANVÄNDAREN KLICKAR "VISA STUDENTER" (Admin-funktionalitet)
   const showStudents = () => {
@@ -97,7 +203,17 @@ function App() {
       education: '',
       password: ''
     });
-  };
+  }
+
+    const showCompanyJobAdRegistration = () => {
+      setCurrentPage('register-jobad');
+      setJobAdForm({
+        title: "",
+        description: "",
+        location: "",
+        period: ""
+      });
+    }
 
   // Visa "Hantera Profil" där student anger sitt ID
   const showManageProfile = () => {
@@ -260,11 +376,6 @@ function App() {
         <h1>Student Portal</h1>
         
         <div className="options">
-          <div className="option-card" onClick={showStudentRegistration}>
-            <div className="icon">📝</div>
-            <h3>Registrera dig</h3>
-            <p>Skapa ett nytt studentkonto</p>
-          </div>
           
           <div className="option-card" onClick={showManageProfile}>
             <div className="icon">👤</div>
@@ -298,18 +409,14 @@ function App() {
         <h1>Företag Portal</h1>
         
         <div className="options">
-          <div className="option-card" onClick={() => alert('Kommer snart!')}>
-            <div className="icon">➕</div>
-            <h3>Registrera Företag</h3>
-            <p>Lägg till ditt företag i systemet</p>
-          </div>
           
-          <div className="option-card" onClick={() => alert('Kommer snart!')}>
+          <div className="option-card" onClick={showCompanyJobAdRegistration}>
             <div className="icon">📋</div>
             <h3>Hantera Praktikplatser</h3>
             <p>Skapa och hantera praktikplatser</p>
           </div>
         </div>
+
         {/* Footer */}
       <div className="footer">
         <p>&copy; 2025 Internship Portal - Enkel och effektiv praktikhantering</p>
@@ -465,8 +572,8 @@ function App() {
   if (currentPage === 'home_companies') {
     return (
       <div className="App">
-        <button onClick={() => setCurrentPage('landing-container')} className="back-button">
-          ← Tillbaka till Start
+        <button onClick={() => setCurrentPage('home')} className="back-button">
+          ← Tillbaka till Startsidan
         </button>
         
         <h1>Företag:</h1>
@@ -482,12 +589,73 @@ function App() {
     );
   }
 
+  //Registrera Jobad
+  if (currentPage === 'register-jobad') {
+    return (
+      <div className='App'>
+        <button onClick={() => setCurrentPage('home')} className="back-button">
+          ← Tillbaka till startsidan
+        </button>
+        <h1>Skapa ny praktikannons</h1>
+
+        <form onSubmit={createJobAd} className='student-form'>
+          <div>
+            <label>Titel:</label>
+            <input
+              type="text"
+              name="title"
+              value={jobAdForm.title}
+              onChange={handleJobAdInput}
+              required
+            />
+          </div>
+
+          <div>
+            <label>Beskrivning:</label>
+            <input
+              type="text"                 // håller samma look som student-formen
+              name="description"
+              value={jobAdForm.description}
+              onChange={handleJobAdInput}
+              required
+            />
+          </div>
+
+          <div>
+            <label>Plats:</label>
+            <input
+              type="text"
+              name="location"
+              value={jobAdForm.location}
+              onChange={handleJobAdInput}
+            />
+          </div>
+
+          <div>
+            <label>Period:</label>
+            <input
+              type="text"
+              name="period"
+              value={jobAdForm.period}
+              onChange={handleJobAdInput}
+            />
+          </div>
+
+          <button type="submit">Skapa Jobbannons</button>
+
+          {jobAdStatus === "ok" && <p style={{ marginTop: 8 }}>✅ Annons skapad!</p>}
+          {jobAdStatus === "error" && <p style={{ marginTop: 8 }}>❌ {jobAdError}</p>}    
+        </form>
+      </div>
+    )
+  }
+
   // Registrera student
   if (currentPage === 'register-student') {
     return (
       <div className="App">
-        <button onClick={() => setCurrentPage('student-portal')} className="back-button">
-          ← Tillbaka till Student Portal
+        <button onClick={() => setCurrentPage('home')} className="back-button">
+          ← Tillbaka till startsidan
         </button>
         
         <h1>Registrera ny student</h1>
@@ -597,6 +765,13 @@ function App() {
           <div className="icon">⚙️</div>
           <h3>Admin Portal</h3>
           <p>Hantera studenter, företag och systemfunktioner</p>
+        </div>
+
+        {/* PORTAL 2: Registrera student */}
+        <div className="option-card" onClick={showStudentRegistration}>
+          <div className="icon">📝</div>
+          <h3>Registrera dig</h3>
+          <p>Skapa ett nytt studentkonto</p>
         </div>
         
         {/* PORTAL 3: Student Portal */}
