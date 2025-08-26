@@ -48,11 +48,7 @@ export default function Login({setCurrentPage}) {
                 setStatus?.("error");
                 alert(`Inloggning misslyckades: ${err?.message || "Okänt fel"}`);
             }
-
-
-                
-                
-            };
+          };
 
 
   return(

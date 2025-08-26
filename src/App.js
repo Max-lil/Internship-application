@@ -191,6 +191,10 @@ function App() {
     setCurrentPage('company-portal');
   };
 
+  const showLoginPortal = () => {
+    setCurrentPage('login')
+  }
+
   // Visa studentregistrering
   const showStudentRegistration = () => {
     setCurrentPage('register-student');
@@ -786,6 +790,12 @@ function App() {
           <div className="icon">🏢</div>
           <h3>Företag Portal</h3>
           <p>Registrera företag och hantera praktikplatser</p>
+        </div>
+
+        <div className="option-card" onClick={showLoginPortal}>
+          <div className="icon">🏢</div>
+          <h3>Logga in</h3>
+          <p>Logga in som student och företag</p>
         </div>
       </div>
       
