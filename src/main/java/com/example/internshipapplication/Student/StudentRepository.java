@@ -13,6 +13,5 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     // Kolla dubbletter av e-post
     boolean existsByEmail(String email);
+
 }
-
-

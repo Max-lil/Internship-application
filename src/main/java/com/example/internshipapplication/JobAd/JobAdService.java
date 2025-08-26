@@ -26,6 +26,15 @@ public class JobAdService {
         return jobAdRepository.save(jobAd);
     }
 
+    public JobAd createJobAdForLoggedInCompany(String companyEmail, JobAd jobAd) {
+        // Hämta företaget baserat på email
+        Company company = companyRepository.findByEmail(companyEmail)
+                .orElseThrow(() -> new RuntimeException("Företag med email "+companyEmail + " finns inte."));
+        // Koppla annonsen till företaget
+        jobAd.setCompany(company);
+        return jobAdRepository.save(jobAd);
+    }
+
     public List<JobAd> getAllJobAds() {
         return jobAdRepository.findAll();
     }
