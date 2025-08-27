@@ -28,11 +28,10 @@ public class JobAdController {
 
         // Skapa annons kopplat till det företaget
         JobAd saved = jobAdService.createJobAdForLoggedInCompany(companyEmail, jobAd);
-
         return ResponseEntity.ok(saved);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<JobAd> getAll(){
         return jobAdService.getAllJobAds();
     }

@@ -16,6 +16,7 @@ public class Company {
     private String name;
 
     private String industry;
+
     private String location;
 
     @Column(nullable = false)

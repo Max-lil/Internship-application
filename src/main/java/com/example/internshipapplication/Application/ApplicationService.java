@@ -10,21 +10,18 @@ import com.example.internshipapplication.Student.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
 public class ApplicationService {
 
     private final JobAdRepository jobAdRepository;
-    private ApplicationRepository applicationRepository;
+    private final ApplicationRepository applicationRepository;
+    private final StudentRepository studentRepository;
 
-    private CompanyRepository companyRepository;
-
-    private StudentRepository studentRepository;
-
-    public ApplicationService(ApplicationRepository applicationRepository, CompanyRepository companyRepository, StudentRepository studentRepository, JobAdRepository jobAdRepository) {
+    public ApplicationService(ApplicationRepository applicationRepository, StudentRepository studentRepository, JobAdRepository jobAdRepository) {
         this.applicationRepository = applicationRepository;
-        this.companyRepository = companyRepository;
         this.studentRepository = studentRepository;
         this.jobAdRepository = jobAdRepository;
     }
@@ -42,6 +39,31 @@ public class ApplicationService {
         application.setStudent(student);
         application.setCompany(company);
         application.setJobAd(jobAd);
+        application.setMessage(message);
+        application.setCvFile(student.getCvFile());
+        return applicationRepository.save(application);
+
+    }
+
+    public Application createApplicationForJobAd(
+            String studentEmail,
+            Long jobAdId,
+            String message
+    ){
+        // Hämta studenten via e-post
+        Student student = studentRepository.findByEmail(studentEmail)
+                .orElseThrow(() -> new RuntimeException("Studenten kunde ej hittas"));
+
+        // Hämta annons
+        JobAd jobad = jobAdRepository.findById(jobAdId)
+                .orElseThrow(() -> new RuntimeException("Annons hittades ej"));
+
+        // Hämta företaget från annonsen
+        Company company = jobad.getCompany();
+
+        Application application = new Application();
+        application.setStudent(student);
+        application.setCompany(company);
         application.setMessage(message);
         application.setCvFile(student.getCvFile());
         return applicationRepository.save(application);
