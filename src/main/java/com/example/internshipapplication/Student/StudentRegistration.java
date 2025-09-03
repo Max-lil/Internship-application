@@ -22,35 +22,28 @@ public class StudentRegistration {
      * Skapa en student. CV är valfritt vid registrering.
      */
     @PostMapping
-    public ResponseEntity<Student> addStudent(
-            @RequestParam String firstName,
-            @RequestParam String lastName,
-            @RequestParam String location,
-            @RequestParam String email,
-            @RequestParam String phoneNumber,
-            @RequestParam(required = false) MultipartFile cv,
-            @RequestParam(required = false) List<String> skills,
-            @RequestParam(required = true) String education,
-            @RequestParam(required = true) String password
-    ) {
-        if (firstName == null || firstName.trim().isEmpty()) {
-            throw new InvalidInputException("Förnamn får inte vara tomt.");
-        }
-
-        if (!email.matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
-            throw new InvalidInputException("Ogiltig e-postadress.");
-        }
-        if (studentService.emailExists(email)) {
-            throw new InvalidInputException("E-postadressen är redan registrerad.");
-        }
-
-
+    public ResponseEntity<?> addStudent(@RequestBody Student student) {
         try {
-            Student student = studentService.addStudent(firstName, lastName, location, email, phoneNumber, cv, skills,
-                    education, password);
-            return ResponseEntity.ok(student);
+            if (student.getFirstName() == null || student.getFirstName().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body("Förnamn får inte vara tomt.");
+            }
+
+            if (!student.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+                return ResponseEntity.badRequest().body("Ogiltig e-postadress.");
+            }
+
+            if (studentService.emailExists(student.getEmail())) {
+                return ResponseEntity.badRequest().body("E-postadressen är redan registrerad.");
+            }
+
+            Student savedStudent = studentService.addStudent(
+                    student.getFirstName(), student.getLastName(), student.getLocation(),
+                    student.getEmail(), student.getPhoneNumber(), null, null,
+                    student.getEducation(), student.getPassword()
+            );
+            return ResponseEntity.ok(savedStudent);
         } catch (Exception e) {
-            throw new RuntimeException("Misslyckades att registrera student.", e);
+            return ResponseEntity.badRequest().body("Misslyckades att registrera student: " + e.getMessage());
         }
     }
 }

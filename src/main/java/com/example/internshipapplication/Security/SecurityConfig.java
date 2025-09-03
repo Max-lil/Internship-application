@@ -35,9 +35,12 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable()) // DEV: enklast. (Aktivera sen om du vill.)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/logout", "company/all", "/register/student").permitAll()
-                        .requestMatchers("/students/**").hasRole("STUDENT")
-                        .requestMatchers("/companies/**", "/jobads/**", "/company/me", "/jobads/create/**", "/me").hasRole("COMPANY")
+                        .requestMatchers("/login", "/logout", "/register/**", "/me", "/students/all", "/company/all", "/jobads/all").permitAll()
+                        .requestMatchers("/students/cv/**").hasAnyRole("STUDENT", "COMPANY")  // <- Flytta upp
+                        .requestMatchers("/students/me").hasRole("STUDENT")                   // <- Flytta upp
+                        .requestMatchers("/students/**").hasRole("STUDENT")                   // <- Behåll sist
+                        .requestMatchers("/application/apply/**").hasRole("STUDENT")
+                        .requestMatchers("/company/**", "/jobads/create/**").hasRole("COMPANY")
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(userDetailsService)

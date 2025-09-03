@@ -64,6 +64,7 @@ public class ApplicationService {
         Application application = new Application();
         application.setStudent(student);
         application.setCompany(company);
+        application.setJobAd(jobad);
         application.setMessage(message);
         application.setCvFile(student.getCvFile());
         return applicationRepository.save(application);
