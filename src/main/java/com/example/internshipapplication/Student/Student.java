@@ -34,7 +34,7 @@ public class Student {
     private String password;
 
     @JsonProperty("phone_number")
-    @Column(nullable = true, unique = true)
+    @Column(nullable = false, unique = true)
     private String phoneNumber;
 
     @Column(name = "created_at", updatable = false, insertable = false)
