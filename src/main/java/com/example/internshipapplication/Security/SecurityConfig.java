@@ -35,11 +35,13 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf.disable()) // DEV: enklast. (Aktivera sen om du vill.)
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/login", "/logout", "company/all", "/register/student").permitAll()
                         .requestMatchers("/students/**").hasRole("STUDENT")
                         .requestMatchers("/companies/**").hasRole("COMPANY")
                         .anyRequest().authenticated()
                 )
+                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
                 .userDetailsService(userDetailsService)
                 .formLogin(form -> form
                         .loginProcessingUrl("/login")
