@@ -4,6 +4,8 @@ import com.example.internshipapplication.Company.CompanyRepository;
 import com.example.internshipapplication.Student.Student;
 import com.example.internshipapplication.Student.StudentRepository;
 import com.example.internshipapplication.Student.StudentService;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@ActiveProfiles("test")
 @Transactional
 public class UserServiceIntegrationTest {
 
@@ -69,8 +72,6 @@ public class UserServiceIntegrationTest {
 
         assertTrue(result.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_COMPANY")));
     }
-
-
 
 
 }
